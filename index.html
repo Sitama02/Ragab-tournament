@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>بطولة رجب الرمضانية الثانية</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              cairo: ['Cairo', 'sans-serif'],
+            },
+            colors: {
+              navy: {
+                800: '#0f172a', // Darker secondary navy
+                900: '#051024', // Very dark primary navy
+              },
+              gold: {
+                400: '#FFD700', // Distinct Gold
+                500: '#E6C200', // Darker Gold for hover
+                100: '#FFF9C4', // Light Gold for backgrounds
+              },
+              gray: {
+                50: '#F9FAFB',
+                100: '#F3F4F6',
+                200: '#E5E7EB',
+                800: '#1F2937',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        font-family: 'Cairo', sans-serif;
+        background-color: #f3f4f6;
+      }
+      .scrollbar-hide::-webkit-scrollbar { display: none; }
+      .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+      .fade-in { animation: fadeIn 0.3s ease-in-out; }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+      
+      /* Glass effect for header cards */
+      .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+      }
+    </style>
+  <link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-gray-100 min-h-screen pb-20 text-gray-800">
+    <!-- Header -->
+    <header class="bg-navy-900 text-white sticky top-0 z-50 shadow-xl border-b border-navy-800">
+      <div class="max-w-md mx-auto px-4 py-4 flex items-center justify-between">
+         <div class="flex items-center gap-3">
+           <div class="w-10 h-10 bg-gradient-to-br from-gold-400 to-yellow-600 rounded-lg flex items-center justify-center shadow-lg transform rotate-3 ring-2 ring-navy-800">
+              <i data-lucide="trophy" class="text-navy-900 w-5 h-5"></i>
+           </div>
+           <div>
+             <h1 class="font-bold text-lg leading-tight text-white">بطولة رجب</h1>
+             <p class="text-xs text-gray-400">الرمضانية الثانية</p>
+           </div>
+         </div>
+         <div class="text-xs bg-navy-800 px-3 py-1 rounded-full text-gold-400 border border-navy-700 shadow-inner">
+           موسم 1446
+         </div>
+      </div>
+      <!-- Navigation Tabs -->
+      <div class="max-w-md mx-auto px-2 mt-2 pb-2">
+        <div class="flex bg-navy-800/50 p-1 rounded-xl border border-navy-700/50" id="nav-tabs">
+          <!-- Navigation will be injected here -->
+          <div class="p-2 w-full text-center text-xs text-gray-400">جاري التحميل...</div>
+        </div>
+      </div>
+    </header>
+
+    <main id="app-content" class="max-w-md mx-auto px-4 py-6 space-y-4">
+       <!-- Content will be injected here -->
+       <div class="text-center py-10 text-gray-500">جاري تحميل البيانات...</div>
+    </main>
+
+    <footer class="text-center py-6 text-gray-400 text-xs border-t border-gray-200 mt-8">
+      <p class="font-bold text-navy-900">&copy; 2025 بطولة رجب الرمضانية الثانية</p>
+      <p class="mt-1">جميع الحقوق محفوظة</p>
+    </footer>
+
+    <!-- Main Logic Script -->
+    <script>
+      // ==========================================
+      // إرشادات تعديل البيانات (INSTRUCTIONS)
+      // ==========================================
+      //
+      // 1. قسم الفرق (TEAMS):
+      //    - قم بتعديل أسماء الفرق والمجموعات هنا.
+      //    - ملاحظة هامة: لا تقم بإضافة النقاط والأهداف يدوياً! النظام سيقوم بحسابها تلقائياً بناءً على نتائج المباريات.
+      //
+      // 2. قسم المباريات (MATCHES):
+      //    - لإضافة نتيجة مباراة انتهت:
+      //      1. غير الحالة (status) إلى 'FINISHED'.
+      //      2. ضع النتيجة في (homeScore) و (awayScore).
+      //      3. في قسم details -> scorers، أضف اللاعبين. مثال:
+      //         scorers: [{ player: 'اسم اللاعب', teamId: 't1' }, { player: 'لاعب آخر', teamId: 't2' }]
+      //
+      // 3. قسم الهدافين (PLAYERS):
+      //    - أضف اسم اللاعب وعدد أهدافه ليظهر في القائمة.
+      //
+      // ==========================================
+
+      // --- Error Handling ---
+      window.onerror = function(msg, url, lineNo, columnNo, error) {
+        const container = document.getElementById('app-content');
+        if (container) {
+          container.innerHTML = `
+            <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg text-sm text-center">
+              <strong>حدث خطأ غير متوقع</strong><br>
+              ${msg}
+            </div>
+          `;
+        }
+        return false;
+      };
+
+      // --- Data Configuration ---
+      
+      // تعريف الفرق (بدون نقاط، سيتم الحساب تلقائياً)
+      const TEAMS = [
+         // Group A
+        { id: 't1', name: 'بريميديان', group: 'A', logoColor: 'bg-blue-600' },
+        { id: 't2', name: 'المزرعة', group: 'A', logoColor: 'bg-red-600' },
+        { id: 't3', name: 'سينما', group: 'A', logoColor: 'bg-yellow-500' },
+        { id: 't4', name: 'فيوتشر', group: 'A', logoColor: 'bg-black' },
+        // Group B
+        { id: 't5', name: 'جرين بلازا ان', group: 'B', logoColor: 'bg-green-600' },
+        { id: 't6', name: 'رجب موتورز', group: 'B', logoColor: 'bg-white border-2 border-red-500 text-red-600' },
+        { id: 't7', name: 'الملاهى', group: 'B', logoColor: 'bg-emerald-600' },
+        { id: 't8', name: 'فريق 15', group: 'B', logoColor: 'bg-red-500' },
+        // Group C
+        { id: 't9', name: 'الملاعب', group: 'C', logoColor: 'bg-blue-700' },
+        { id: 't10', name: 'جراند بلازا', group: 'C', logoColor: 'bg-yellow-400' },
+        { id: 't11', name: 'هيلتون', group: 'C', logoColor: 'bg-black' },
+        { id: 't12', name: 'مركز سموحة', group: 'C', logoColor: 'bg-yellow-600' },
+        // Group D
+        { id: 't13', name: 'مركز سموحة 2', group: 'D', logoColor: 'bg-purple-700' },
+        { id: 't14', name: 'ريد روز', group: 'D', logoColor: 'bg-white border-2 border-black text-black' },
+        { id: 't15', name: 'المعهد', group: 'D', logoColor: 'bg-red-700' },
+        { id: 't16', name: 'فريق 16', group: 'D', logoColor: 'bg-blue-900' },
+      ];
+
+      // سجل المباريات
+      const MATCHES = [
+        // Finished Matches (Group A & B) - Examples
+        { 
+          id: 'm1', homeTeamId: 't1', awayTeamId: 't2', homeScore: 5, awayScore: 6, date: '9 مارس', time: '22:30', stadium: 'الملعب الاول', status: 'FINISHED', group: 'A', round: 'الجولة الأولى',
+          details: {
+            scorers: [{ player: 'محمد على', teamId: 't1' }, { player: 'خالد على', teamId: 't2' }]
+          }
+        },
+        { 
+          id: 'm2', homeTeamId: 't3', awayTeamId: 't4', homeScore: null, awayScore: null, date: '9 مارس', time: '22:30', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'A', round: 'الجولة الأولى',
+          
+        },
+        { 
+          id: 'm3', homeTeamId: 't5', awayTeamId: 't6', homeScore: null, awayScore: null, date: '9 مارس', time: '22:45', stadium: 'الملعب الاول', status: 'SCHEDULED', group: 'B', round: 'الجولة الأولى',
+         
+        },
+        { 
+          id: 'm4', homeTeamId: 't7', awayTeamId: 't8', homeScore: null, awayScore: null, date: '9 مارس', time: '22:45', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'الجولة الأولى',
+         
+        },
+        { 
+          id: 'm5', homeTeamId: 't1', awayTeamId: 't3', homeScore: null, awayScore: null, date: '9 مارس', time: '23:00', stadium: 'الملعب الاول', status: 'SCHEDULED', group: 'A', round: 'الجولة الثانية',
+          
+        },
+        // Live & Scheduled Matches
+        { id: 'm6', homeTeamId: 't9', awayTeamId: 't12', homeScore: null, awayScore: null, date: '9 مارس', time: '23:00', stadium: 'الملعب الاول', status: 'SCHEDULED', group: 'C', round: 'الجولة الأولى' },
+        { id: 'm7', homeTeamId: 't10', awayTeamId: 't11', homeScore: null, awayScore: null, date: '9 مارس', time: '23:15', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'C', round: 'الجولة الأولى' },
+        { id: 'm8', homeTeamId: 't13', awayTeamId: 't14', homeScore: null, awayScore: null, date: '9 مارس', time: '23:15', stadium: 'الملعب الاول', status: 'SCHEDULED', group: 'D', round: 'الجولة الأولى' },
+        { id: 'm9', homeTeamId: 't15', awayTeamId: 't16', homeScore: null, awayScore: null, date: '10 مارس', time: '22:00', stadium: 'الملعب الرئيسي', status: 'SCHEDULED', group: 'D', round: 'الجولة الأولى' },
+      ];
+
+      // مباريات خروج المغلوب (استبدل null بمعرف الفريق عند تحديده)
+      const KNOCKOUT_MATCHES = [
+        // Quarter Finals
+        { id: 'qf1', homeTeamId: null, awayTeamId: null, stage: 'ربع النهائي', title: 'ربع النهائي 1', date: 'TBD', time: '22:00', stadium: 'الملعب الرئيسي', status: 'SCHEDULED' },
+        { id: 'qf2', homeTeamId: null, awayTeamId: null, stage: 'ربع النهائي', title: 'ربع النهائي 2', date: 'TBD', time: '23:30', stadium: 'الملعب الرئيسي', status: 'SCHEDULED' },
+        { id: 'qf3', homeTeamId: null, awayTeamId: null, stage: 'ربع النهائي', title: 'ربع النهائي 3', date: 'TBD', time: '22:00', stadium: 'الملعب الرئيسي', status: 'SCHEDULED' },
+        { id: 'qf4', homeTeamId: null, awayTeamId: null, stage: 'ربع النهائي', title: 'ربع النهائي 4', date: 'TBD', time: '23:30', stadium: 'الملعب الرئيسي', status: 'SCHEDULED' },
+        // Semi Finals
+        { id: 'sf1', homeTeamId: null, awayTeamId: null, stage: 'نصف النهائي', title: 'نصف النهائي 1', date: 'TBD', time: '22:00', stadium: 'الملعب الرئيسي', status: 'SCHEDULED' },
+        { id: 'sf2', homeTeamId: null, awayTeamId: null, stage: 'نصف النهائي', title: 'نصف النهائي 2', date: 'TBD', time: '23:30', stadium: 'الملعب الرئيسي', status: 'SCHEDULED' },
+        // Final
+        { id: 'f1', homeTeamId: null, awayTeamId: null, stage: 'النهائي', title: 'النهائي', date: 'TBD', time: '22:30', stadium: 'الملعب الرئيسي', status: 'SCHEDULED' },
+      ];
+
+      // قائمة الهدافين
+      const PLAYERS = [
+        { id: 'p1', name: null, teamId: null, goals: 0, rank: 1 },
+        { id: 'p2', name: null, teamId: null, goals: 0, rank: 2 },
+        { id: 'p3', name: null, teamId: null, goals: 0, rank: 3 },
+        { id: 'p4', name: null, teamId: null, goals: 0, rank: 4 },
+        { id: 'p5', name: null, teamId: null, goals: 0, rank: 5 },
+        { id: 'p6', name: null, teamId: null, goals: 0, rank: 6 },
+        { id: 'p7', name: null, teamId: null, goals: 0, rank: 7 },
+        { id: 'p8', name: null, teamId: null, goals: 0, rank: 8 },
+        { id: 'p9', name: null, teamId: null, goals: 0, rank: 9 },
+        { id: 'p10', name: null, teamId: null, goals: 0, rank: 10 },
+      ];
+      // --- State ---
+      let state = {
+        activeTab: 'matches',
+        matchesFilter: 'ALL',
+        searchQuery: '',
+        expandedMatches: new Set(),
+        expandedGroups: new Set()
+      };
+
+      // --- Utilities ---
+      const getTeam = (id) => TEAMS.find(t => t.id === id) || { name: 'غير محدد', logoColor: 'bg-gray-300' };
+
+      // --- Logic: Calculate Standings ---
+      function calculateStats() {
+        // 1. Initialize stats for all teams to zero
+        TEAMS.forEach(team => {
+          team.played = 0;
+          team.won = 0;
+          team.drawn = 0;
+          team.lost = 0;
+          team.gf = 0;
+          team.ga = 0;
+          team.pts = 0;
+        });
+
+        // 2. Process all finished matches
+        MATCHES.forEach(match => {
+          if (match.status !== 'FINISHED' && match.status !== 'LIVE') return;
+          if (match.homeScore === null || match.awayScore === null) return;
+
+          const home = TEAMS.find(t => t.id === match.homeTeamId);
+          const away = TEAMS.find(t => t.id === match.awayTeamId);
+
+          if (!home || !away) return;
+
+          const hScore = parseInt(match.homeScore);
+          const aScore = parseInt(match.awayScore);
+
+          // Update Played
+          home.played++;
+          away.played++;
+
+          // Update Goals
+          home.gf += hScore;
+          home.ga += aScore;
+          away.gf += aScore;
+          away.ga += hScore;
+
+          // Update Points & W/D/L
+          if (hScore > aScore) {
+            home.won++;
+            home.pts += 3;
+            away.lost++;
+          } else if (hScore < aScore) {
+            away.won++;
+            away.pts += 3;
+            home.lost++;
+          } else {
+            home.drawn++;
+            home.pts += 1;
+            away.drawn++;
+            away.pts += 1;
+          }
+        });
+      }
+
+      // --- Core Functions ---
+      function init() {
+        try {
+          calculateStats(); // Run calculations before rendering
+          renderNav();
+          renderContent();
+          updateIcons();
+        } catch (e) {
+          console.error(e);
+          const container = document.getElementById('app-content');
+          if (container) container.innerHTML = `<div class="text-red-500 text-center p-4">حدث خطأ أثناء تحميل التطبيق.<br>${e.message}</div>`;
+        }
+      }
+
+      function updateIcons() {
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+          window.lucide.createIcons();
+        } else {
+          setTimeout(() => {
+             if (window.lucide && typeof window.lucide.createIcons === 'function') {
+               window.lucide.createIcons();
+             }
+          }, 100);
+        }
+      }
+
+      function renderNav() {
+        const tabs = [
+          { id: 'standings', label: 'الترتيب', icon: 'shield' },
+          { id: 'matches', label: 'المباريات', icon: 'calendar-days' },
+          { id: 'scorers', label: 'الهدافين', icon: 'users' },
+        ];
+
+        const container = document.getElementById('nav-tabs');
+        if (!container) return;
+
+        container.innerHTML = tabs.map(tab => `
+          <button
+            onclick="setTab('${tab.id}')"
+            class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 ${
+              state.activeTab === tab.id 
+                ? 'bg-white text-navy-900 shadow-md border border-gray-100' 
+                : 'text-gray-400 hover:text-white hover:bg-navy-800'
+            }"
+          >
+            <i data-lucide="${tab.icon}" class="w-4 h-4 ${state.activeTab === tab.id ? 'text-gold-400' : ''}"></i>
+            <span>${tab.label}</span>
+          </button>
+        `).join('');
+      }
+
+      function renderContent() {
+        const container = document.getElementById('app-content');
+        if (!container) return;
+
+        container.className = "max-w-md mx-auto px-4 py-6 space-y-4 fade-in";
+        
+        if (state.activeTab === 'matches') {
+          renderMatches(container);
+        } else if (state.activeTab === 'standings') {
+          renderStandings(container);
+        } else if (state.activeTab === 'scorers') {
+          renderScorers(container);
+        }
+      }
+
+      // --- Public Actions (Exposed to Window) ---
+      window.setTab = function(tab) {
+        state.activeTab = tab;
+        state.searchQuery = '';
+        renderNav();
+        renderContent();
+        updateIcons();
+      }
+
+      window.setMatchFilter = function(filter) {
+        state.matchesFilter = filter;
+        renderContent();
+        updateIcons();
+      }
+      
+      window.setSearch = function(query) {
+        state.searchQuery = query;
+        renderContent();
+        updateIcons();
+      }
+
+      window.toggleMatchDetails = function(matchId) {
+        if (state.expandedMatches.has(matchId)) {
+          state.expandedMatches.delete(matchId);
+        } else {
+          state.expandedMatches.add(matchId);
+        }
+        renderContent();
+        updateIcons();
+      }
+
+      window.toggleGroupMatches = function(group) {
+        if (state.expandedGroups.has(group)) {
+          state.expandedGroups.delete(group);
+        } else {
+          state.expandedGroups.add(group);
+        }
+        renderContent();
+        updateIcons();
+      }
+
+      // --- Component Rendering ---
+      function renderMatches(container) {
+        // 1. Calculate Filtered Matches
+        let filteredMatches = MATCHES.filter(m => {
+          if (state.matchesFilter === 'ALL') return true;
+          return m.group === state.matchesFilter;
+        });
+
+        if (state.searchQuery) {
+          const query = state.searchQuery.trim();
+          filteredMatches = filteredMatches.filter(m => {
+             const h = getTeam(m.homeTeamId);
+             const a = getTeam(m.awayTeamId);
+             return h.name.includes(query) || a.name.includes(query);
+          });
+        }
+
+        // 2. Prepare HTML Strings
+        const searchHtml = `
+          <div class="relative mb-4">
+            <input 
+              id="matches-search-input"
+              type="text" 
+              placeholder="بحث عن فريق..." 
+              class="w-full bg-white border border-gray-300 rounded-lg py-2.5 px-4 pr-10 text-sm focus:outline-none focus:border-navy-900 focus:ring-1 focus:ring-navy-900 transition-all text-navy-900 font-medium placeholder-gray-400"
+              oninput="window.setSearch(this.value)"
+              value="${state.searchQuery}"
+            >
+            <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"></i>
+          </div>
+        `;
+
+        const filters = ['ALL', 'A', 'B', 'C', 'D'];
+        const filterHtml = `
+          <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide mb-4">
+            ${filters.map(f => `
+              <button
+                onclick="setMatchFilter('${f}')"
+                class="px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-colors ${
+                  state.matchesFilter === f 
+                    ? 'bg-navy-900 text-gold-400 shadow-md border border-navy-800' 
+                    : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                }"
+              >
+                ${f === 'ALL' ? 'كل المباريات' : `المجموعة ${f}`}
+              </button>
+            `).join('')}
+          </div>
+        `;
+
+        const matchesListHtml = filteredMatches.length ? filteredMatches.map(match => renderMatchCard(match)).join('') : 
+          `<div class="text-center py-6 text-gray-400 text-sm bg-white rounded-lg border border-gray-200">لا توجد مباريات مطابقة</div>`;
+
+        let knockoutHtml = '';
+        if (state.matchesFilter === 'ALL') {
+          let validKnockout = KNOCKOUT_MATCHES.filter(m => m.homeTeamId && m.awayTeamId);
+          if (state.searchQuery) {
+             const query = state.searchQuery.trim();
+             validKnockout = validKnockout.filter(m => {
+               const h = getTeam(m.homeTeamId);
+               const a = getTeam(m.awayTeamId);
+               return h.name.includes(query) || a.name.includes(query);
+             });
+          }
+
+          if (validKnockout.length > 0) {
+            knockoutHtml = `
+              <div class="mt-8 pt-6 animate-fadeIn">
+                <div class="flex items-center justify-center gap-2 mb-6">
+                   <div class="h-0.5 bg-gray-300 flex-1 rounded-full"></div>
+                   <h3 class="font-black text-navy-900 text-lg px-2">الأدوار الإقصائية</h3>
+                   <div class="h-0.5 bg-gray-300 flex-1 rounded-full"></div>
+                </div>
+                ${validKnockout.map(m => `
+                  <div class="mb-4 relative">
+                     <div class="absolute top-0 right-1/2 transform translate-x-1/2 -translate-y-1/2 z-10">
+                       <span class="text-[10px] font-bold text-navy-900 bg-gold-400 px-3 py-1 rounded-full border-2 border-white shadow-sm whitespace-nowrap">
+                         ${m.stage}
+                       </span>
+                     </div>
+                     ${renderMatchCard(m, true)}
+                  </div>
+                `).join('')}
+              </div>
+            `;
+          }
+        }
+
+        // 3. Render or Update DOM
+        const existingInput = document.getElementById('matches-search-input');
+        
+        // If the search input already exists, we only update the results and filters
+        // This preserves the focus on the input element
+        if (existingInput) {
+            const resultsContainer = document.getElementById('matches-results-container');
+            if (resultsContainer) resultsContainer.innerHTML = matchesListHtml + knockoutHtml;
+            
+            const filtersContainer = document.getElementById('matches-filters-container');
+            if (filtersContainer) filtersContainer.innerHTML = filterHtml;
+            
+            // Sync value if needed (e.g. if cleared via code)
+            if (document.activeElement !== existingInput) {
+               existingInput.value = state.searchQuery;
+            }
+        } else {
+            // Initial render: Build the full structure
+            container.innerHTML = `
+                ${searchHtml}
+                <div id="matches-filters-container">${filterHtml}</div>
+                <div id="matches-results-container">
+                    ${matchesListHtml + knockoutHtml}
+                </div>
+            `;
+        }
+      }
+
+      function renderMatchCard(match, isKnockout = false) {
+        const home = getTeam(match.homeTeamId);
+        const away = getTeam(match.awayTeamId);
+        const isFinished = match.status === 'FINISHED';
+        const isLive = match.status === 'LIVE';
+        const isExpanded = state.expandedMatches.has(match.id);
+
+        let statsHtml = '';
+        if (isExpanded && match.details) {
+          // --- Scorers Logic ---
+          let scorersHtml = '';
+          if (match.details.scorers && match.details.scorers.length > 0) {
+            const homeScorers = match.details.scorers.filter(s => s.teamId === match.homeTeamId);
+            const awayScorers = match.details.scorers.filter(s => s.teamId === match.awayTeamId);
+            
+            scorersHtml = `
+              <div class="mb-5">
+                 <div class="flex justify-between items-start">
+                   <!-- Home Scorers -->
+                   <div class="flex-1 flex flex-col items-center gap-1.5 pt-1">
+                      ${homeScorers.length ? homeScorers.map(s => `
+                        <div class="flex items-center gap-1.5 animate-fadeIn">
+                           <span class="text-xs font-bold text-navy-900">${s.player}</span>
+                           <i data-lucide="goal" class="w-3 h-3 text-gold-500 fill-gold-500"></i>
+                        </div>
+                      `).join('') : '<span class="text-[10px] text-gray-300 py-1">-</span>'}
+                   </div>
+
+                   <!-- Center Label -->
+                   <div class="px-3 flex flex-col items-center justify-center">
+                      <span class="text-[9px] text-gray-400 bg-white border border-gray-100 px-2 py-0.5 rounded-full shadow-sm">الأهداف</span>
+                   </div>
+
+                   <!-- Away Scorers -->
+                   <div class="flex-1 flex flex-col items-center gap-1.5 pt-1">
+                      ${awayScorers.length ? awayScorers.map(s => `
+                        <div class="flex items-center gap-1.5 animate-fadeIn">
+                           <i data-lucide="goal" class="w-3 h-3 text-gold-500 fill-gold-500"></i>
+                           <span class="text-xs font-bold text-navy-900">${s.player}</span>
+                        </div>
+                      `).join('') : '<span class="text-[10px] text-gray-300 py-1">-</span>'}
+                   </div>
+                 </div>
+              </div>
+            `;
+          }
+
+          statsHtml = `
+            <div class="border-t border-gray-100 bg-gray-50/80 p-4 text-sm animate-fadeIn backdrop-blur-sm">
+              ${scorersHtml}
+
+              ${match.details.stats ? `
+                <div class="space-y-3 pt-2 ${scorersHtml ? 'border-t border-gray-200' : ''}">
+                  <div class="flex justify-between text-[10px] text-gray-400 mb-1 uppercase tracking-wider">
+                    <span>${home.name}</span>
+                    <span>الإحصائيات</span>
+                    <span>${away.name}</span>
+                  </div>
+                  ${Object.entries(match.details.stats).map(([key, val]) => {
+                    const label = key === 'possession' ? 'استحواذ' : key === 'shots' ? 'تسديدات' : 'ركنية';
+                    const homeVal = val[0];
+                    const awayVal = val[1];
+                    const total = (typeof homeVal === 'number' ? homeVal : 50) + (typeof awayVal === 'number' ? awayVal : 50);
+                    const homeWidth = (typeof homeVal === 'number') ? (homeVal / total * 100) : 50;
+                    
+                    return `
+                      <div>
+                        <div class="flex justify-between text-xs font-bold text-navy-900 mb-1">
+                          <span>${homeVal}${key === 'possession' ? '%' : ''}</span>
+                          <span class="font-normal text-gray-500 text-[10px]">${label}</span>
+                          <span>${awayVal}${key === 'possession' ? '%' : ''}</span>
+                        </div>
+                        <div class="h-1.5 bg-gray-200 rounded-full overflow-hidden flex dir-ltr">
+                           <div class="bg-navy-900 h-full" style="width: ${homeWidth}%"></div>
+                           <div class="bg-gold-400 h-full flex-1"></div>
+                        </div>
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }
+
+        const headerLabel = match.title ? match.title : `${match.group} - ${match.round}`;
+
+        return `
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md hover:border-gold-400/50 transition-all duration-300 mb-4 cursor-pointer relative z-0 ${isKnockout ? 'mt-4 border-t-4 border-t-gold-400' : ''}" onclick="toggleMatchDetails('${match.id}')">
+            <!-- Header -->
+            <div class="bg-gray-50 px-4 py-2 flex justify-between items-center text-xs text-gray-500 border-b border-gray-100">
+              <div class="flex items-center gap-1.5 text-navy-800 font-medium">
+                <i data-lucide="calendar" class="w-3 h-3 text-gold-500"></i>
+                <span>${match.date}</span>
+              </div>
+              <div class="flex items-center gap-2 font-medium">
+                <span>${headerLabel}</span>
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div class="p-4 flex items-center justify-between relative">
+              <!-- Home -->
+              <div class="flex flex-col items-center flex-1">
+                <div class="w-12 h-12 rounded-full mb-2 flex items-center justify-center text-white shadow-md ${home.logoColor} font-bold text-lg border-2 border-white ring-1 ring-gray-100">
+                  ${home.name.charAt(0)}
+                </div>
+                <span class="text-sm font-bold text-navy-900 text-center leading-tight">${home.name}</span>
+              </div>
+
+              <!-- Score -->
+              <div class="flex flex-col items-center justify-center w-24">
+                ${isLive ? `<span class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse mb-1 shadow-sm">مباشر</span>` : ''}
+                
+                <div class="flex items-center justify-center gap-2 text-2xl font-black text-navy-900">
+                  ${isFinished || isLive ? `
+                    <span>${match.homeScore !== null ? match.homeScore : 0}</span>
+                    <span class="text-gray-300 text-xl font-light">-</span>
+                    <span>${match.awayScore !== null ? match.awayScore : 0}</span>
+                  ` : `<span class="text-xl text-gray-300 font-bold bg-gray-50 px-2 py-1 rounded">VS</span>`}
+                </div>
+
+                ${!isFinished && !isLive ? `
+                   <div class="flex items-center gap-1 mt-2 text-navy-800 text-xs font-bold bg-gold-100 px-2 py-1 rounded-md">
+                     <i data-lucide="clock" class="w-3 h-3"></i>
+                     <span dir="ltr">${match.time}</span>
+                   </div>
+                ` : isFinished ? `
+                   <div class="mt-1 text-[10px] text-gray-400 flex items-center gap-0.5 hover:text-navy-900 transition-colors">
+                     ${isExpanded ? 'إخفاء' : 'تفاصيل'}
+                     <i data-lucide="${isExpanded ? 'chevron-up' : 'chevron-down'}" class="w-3 h-3"></i>
+                   </div>
+                ` : ''}
+              </div>
+
+              <!-- Away -->
+              <div class="flex flex-col items-center flex-1">
+                <div class="w-12 h-12 rounded-full mb-2 flex items-center justify-center text-white shadow-md ${away.logoColor} font-bold text-lg border-2 border-white ring-1 ring-gray-100">
+                  ${away.name.charAt(0)}
+                </div>
+                <span class="text-sm font-bold text-navy-900 text-center leading-tight">${away.name}</span>
+              </div>
+            </div>
+            
+            ${statsHtml}
+
+            <!-- Footer -->
+            <div class="px-4 py-2 bg-gray-50 border-t border-gray-100 flex items-center justify-center gap-1 text-[10px] text-gray-500 font-medium">
+               <i data-lucide="map-pin" class="w-3 h-3 text-gold-500"></i>
+               ${match.stadium}
+            </div>
+          </div>
+        `;
+      }
+
+      function renderStandings(container) {
+        const groups = ['A', 'B', 'C', 'D'];
+        
+        const html = groups.map(group => {
+          const groupTeams = TEAMS.filter(t => t.group === group);
+          groupTeams.sort((a, b) => {
+            if (b.pts !== a.pts) return b.pts - a.pts;
+            const diffA = a.gf - a.ga;
+            const diffB = b.gf - b.ga;
+            if (diffB !== diffA) return diffB - diffA;
+            return b.gf - a.gf;
+          });
+
+          const isExpanded = state.expandedGroups.has(group);
+          const groupMatches = MATCHES.filter(m => m.group === group || m.group === `المجموعة ${group}`);
+
+          return `
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
+              <div class="bg-navy-900 px-4 py-3 flex justify-between items-center cursor-pointer hover:bg-navy-800 transition border-b border-navy-800" onclick="toggleGroupMatches('${group}')">
+                <div class="flex items-center gap-2">
+                   <div class="w-1 h-4 bg-gold-400 rounded-full"></div>
+                   <h3 class="text-white font-bold text-lg">المجموعة ${group}</h3>
+                </div>
+                <div class="flex items-center gap-2 text-xs text-gold-400 bg-navy-800/50 px-2 py-1 rounded-full border border-navy-700">
+                   <span>${isExpanded ? 'إخفاء المباريات' : 'المباريات'}</span>
+                   <i data-lucide="${isExpanded ? 'chevron-up' : 'chevron-down'}" class="w-3 h-3"></i>
+                </div>
+              </div>
+              
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm text-center">
+                  <thead class="bg-gray-50 text-gray-500 font-medium border-b border-gray-200 text-xs">
+                    <tr>
+                      <th class="px-3 py-3 text-right w-1/3">الفريق</th>
+                      <th class="px-2 py-3">ل</th>
+                      <th class="px-2 py-3">ف</th>
+                      <th class="px-2 py-3">ت</th>
+                      <th class="px-2 py-3">خ</th>
+                      <th class="px-2 py-3">له</th>
+                      <th class="px-2 py-3">ع</th>
+                      <th class="px-2 py-3">+/-</th>
+                      <th class="px-3 py-3 font-bold text-navy-900 bg-gray-100">نقاط</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-100">
+                    ${groupTeams.map((team, index) => `
+                      <tr class="hover:bg-blue-50/20 transition-colors">
+                        <td class="px-3 py-3 text-right font-semibold text-gray-800 flex items-center gap-3">
+                          <span class="w-5 text-center text-xs ${index < 2 ? 'text-green-600 font-black' : 'text-gray-400 font-medium'}">${index + 1}</span>
+                          <div class="w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center text-[10px] text-white ${team.logoColor} font-bold shadow-sm">
+                            ${team.name.charAt(0)}
+                          </div>
+                          <span class="truncate text-xs font-bold">${team.name}</span>
+                        </td>
+                        <td class="px-2 py-3 text-gray-600 font-medium">${team.played}</td>
+                        <td class="px-2 py-3 text-gray-600">${team.won}</td>
+                        <td class="px-2 py-3 text-gray-600">${team.drawn}</td>
+                        <td class="px-2 py-3 text-gray-600">${team.lost}</td>
+                        <td class="px-2 py-3 text-gray-600">${team.gf}</td>
+                        <td class="px-2 py-3 text-gray-600">${team.ga}</td>
+                        <td class="px-2 py-3 text-gray-600 font-medium text-xs" dir="ltr">
+                          ${(team.gf - team.ga) > 0 ? '+' : ''}${team.gf - team.ga}
+                        </td>
+                        <td class="px-3 py-3 font-black text-navy-900 bg-gray-50">${team.pts}</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+
+              ${isExpanded ? `
+                <div class="bg-gray-50 border-t border-gray-200 p-4 animate-fadeIn">
+                  <h4 class="text-xs font-bold text-gray-500 mb-3 flex items-center gap-1">
+                    <i data-lucide="calendar-days" class="w-3 h-3"></i>
+                    نتائج المباريات
+                  </h4>
+                  <div class="space-y-3">
+                     ${groupMatches.map(m => renderMatchCard(m)).join('')}
+                  </div>
+                </div>
+              ` : ''}
+
+              <div class="bg-gray-50 px-4 py-2 text-[10px] text-gray-400 border-t border-gray-100 flex gap-4">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500 ring-1 ring-green-200"></span> تأهل</span>
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gray-300 ring-1 ring-gray-200"></span> خروج</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        container.innerHTML = html;
+      }
+
+      function renderScorers(container) {
+        let sorted = [...PLAYERS].sort((a, b) => b.goals - a.goals);
+        
+        if (state.searchQuery) {
+          sorted = sorted.filter(p => {
+             const team = getTeam(p.teamId);
+             return p.name.includes(state.searchQuery) || (team && team.name.includes(state.searchQuery));
+          });
+        }
+
+        const searchHtml = `
+          <div class="relative mb-6">
+            <input 
+              type="text" 
+              placeholder="بحث عن لاعب..." 
+              class="w-full bg-white border border-gray-300 rounded-lg py-3 px-4 pr-10 text-sm focus:outline-none focus:border-navy-900 focus:ring-1 focus:ring-navy-900 transition-all shadow-sm font-medium"
+              oninput="window.setSearch(this.value)"
+              value="${state.searchQuery}"
+            >
+            <i data-lucide="search" class="absolute left-3 top-3.5 w-4 h-4 text-gray-400"></i>
+          </div>
+        `;
+        
+        const listHtml = `
+          <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+            <div class="bg-gradient-to-r from-navy-900 to-navy-800 px-6 py-8 flex flex-col items-center justify-center text-center relative overflow-hidden">
+              <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+              <div class="bg-gold-400 p-3 rounded-full mb-3 shadow-lg shadow-gold-400/20 ring-4 ring-navy-800/50 z-10">
+                  <i data-lucide="trophy" class="text-navy-900 w-8 h-8"></i>
+              </div>
+              <h2 class="text-white text-xl font-bold z-10">قائمة الهدافين</h2>
+              <p class="text-gold-400 text-xs mt-1 font-medium tracking-wider z-10">بطولة رجب الرمضانية الثانية</p>
+            </div>
+
+            <div class="divide-y divide-gray-100">
+              ${sorted.length ? sorted.map((player, index) => {
+                const team = getTeam(player.teamId);
+                return `
+                  <div class="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors group">
+                    <div class="flex items-center gap-4">
+                      <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full font-bold text-sm shadow-sm ${
+                        index === 0 ? 'bg-gold-400 text-navy-900 ring-2 ring-gold-200' : 
+                        index === 1 ? 'bg-gray-300 text-gray-800 ring-2 ring-gray-200' :
+                        index === 2 ? 'bg-orange-300 text-orange-900 ring-2 ring-orange-200' : 'bg-gray-100 text-gray-400'
+                      }">
+                        ${index + 1}
+                      </div>
+                      
+                      <div>
+                        <h4 class="font-bold text-navy-900 group-hover:text-blue-700 transition-colors">${player.name}</h4>
+                        <div class="flex items-center gap-1.5 mt-0.5">
+                           <span class="w-2 h-2 rounded-full ${team.logoColor}"></span>
+                           <p class="text-xs text-gray-500 font-medium">${team.name}</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="flex flex-col items-center justify-center bg-gray-50 rounded-lg px-3 py-1 border border-gray-100 group-hover:border-gold-400 transition-colors">
+                      <span class="text-lg font-black text-navy-900">${player.goals}</span>
+                      <span class="text-[10px] text-gray-400 font-medium">أهداف</span>
+                    </div>
+                  </div>
+                `;
+              }).join('') : `<div class="p-8 text-center text-gray-400 text-sm">لا يوجد لاعبين مطابقين للبحث</div>`}
+            </div>
+          </div>
+        `;
+        
+        container.innerHTML = searchHtml + listHtml;
+      }
+
+      // Initialize
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    </script>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
