@@ -139,72 +139,163 @@
       // تعريف الفرق (بدون نقاط، سيتم الحساب تلقائياً)
       const TEAMS = [
          // Group A
-        { id: 't1', name: 'بريميديان', group: 'A', logoColor: 'bg-blue-600' },
-        { id: 't2', name: 'المزرعة', group: 'A', logoColor: 'bg-red-600' },
-        { id: 't3', name: 'سينما', group: 'A', logoColor: 'bg-yellow-500' },
-        { id: 't4', name: 'فيوتشر', group: 'A', logoColor: 'bg-black' },
+        { id: 't1', name: 'المزرعة', group: 'A', logoColor: 'bg-blue-600' },
+        { id: 't2', name: 'الجامعة', group: 'A', logoColor: 'bg-red-600' },
+        { id: 't3', name: 'جرين بلازا إن', group: 'A', logoColor: 'bg-yellow-500' },
+        { id: 't4', name: 'رجب موتورز', group: 'A', logoColor: 'bg-black' },
         // Group B
-        { id: 't5', name: 'جرين بلازا ان', group: 'B', logoColor: 'bg-green-600' },
-        { id: 't6', name: 'رجب موتورز', group: 'B', logoColor: 'bg-white border-2 border-red-500 text-red-600' },
-        { id: 't7', name: 'الملاهى', group: 'B', logoColor: 'bg-emerald-600' },
-        { id: 't8', name: 'فريق 15', group: 'B', logoColor: 'bg-red-500' },
+        { id: 't5', name: 'جرين بلازا 1', group: 'B', logoColor: 'bg-green-600' },
+        { id: 't6', name: 'بيرميديون', group: 'B', logoColor: 'bg-white border-2 border-red-500 text-red-600' },
+        { id: 't7', name: 'هيلتون كينج رانش', group: 'B', logoColor: 'bg-emerald-600' },
+        { id: 't8', name: 'المعهد', group: 'B', logoColor: 'bg-red-500' },
         // Group C
         { id: 't9', name: 'الملاعب', group: 'C', logoColor: 'bg-blue-700' },
-        { id: 't10', name: 'جراند بلازا', group: 'C', logoColor: 'bg-yellow-400' },
-        { id: 't11', name: 'هيلتون', group: 'C', logoColor: 'bg-black' },
-        { id: 't12', name: 'مركز سموحة', group: 'C', logoColor: 'bg-yellow-600' },
+        { id: 't10', name: ' جرين بلازا 2', group: 'C', logoColor: 'bg-yellow-400' },
+        { id: 't11', name: 'سينما', group: 'C', logoColor: 'bg-black' },
+        { id: 't12', name: 'الملاهي', group: 'C', logoColor: 'bg-yellow-600' },
         // Group D
-        { id: 't13', name: 'مركز سموحة 2', group: 'D', logoColor: 'bg-purple-700' },
-        { id: 't14', name: 'ريد روز', group: 'D', logoColor: 'bg-white border-2 border-black text-black' },
-        { id: 't15', name: 'المعهد', group: 'D', logoColor: 'bg-red-700' },
-        { id: 't16', name: 'فريق 16', group: 'D', logoColor: 'bg-blue-900' },
+        { id: 't13', name: 'هيلتون', group: 'D', logoColor: 'bg-purple-700' },
+        { id: 't14', name: 'فيوتشر ستارز - ريد روز', group: 'D', logoColor: 'bg-white border-2 border-black text-black' },
+        { id: 't15', name: 'جراند بلازا', group: 'D', logoColor: 'bg-red-700' },
+        { id: 't16', name: 'المينا الجاف', group: 'D', logoColor: 'bg-blue-900' },
       ];
 
       // سجل المباريات
-      const MATCHES = [
-        // Finished Matches (Group A & B) - Examples
-        { 
-          id: 'm1', homeTeamId: 't1', awayTeamId: 't2', homeScore: null, awayScore: null, date: '9 مارس', time: '22:30', stadium: 'الملعب الاول', status: 'SCHEDULED', group: 'A', round: 'الجولة الأولى',
-          details: {
-            scorers: [{ player: null, teamId: null }, { player: null, teamId: null }]
-          }
-        },
-        { 
-          id: 'm2', homeTeamId: 't3', awayTeamId: 't4', homeScore: null, awayScore: null, date: '9 مارس', time: '22:30', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'A', round: 'الجولة الأولى',
-          
-        },
-        { 
-          id: 'm3', homeTeamId: 't5', awayTeamId: 't6', homeScore: null, awayScore: null, date: '9 مارس', time: '22:45', stadium: 'الملعب الاول', status: 'SCHEDULED', group: 'B', round: 'الجولة الأولى',
-         
-        },
-        { 
-          id: 'm4', homeTeamId: 't7', awayTeamId: 't8', homeScore: null, awayScore: null, date: '9 مارس', time: '22:45', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'الجولة الأولى',
-         
-        },
-        { 
-          id: 'm5', homeTeamId: 't1', awayTeamId: 't3', homeScore: null, awayScore: null, date: '9 مارس', time: '23:00', stadium: 'الملعب الاول', status: 'SCHEDULED', group: 'A', round: 'الجولة الثانية',
-          
-        },
-        // Live & Scheduled Matches
-        { id: 'm6', homeTeamId: 't9', awayTeamId: 't12', homeScore: null, awayScore: null, date: '9 مارس', time: '23:00', stadium: 'الملعب الاول', status: 'SCHEDULED', group: 'C', round: 'الجولة الأولى' },
-        { id: 'm7', homeTeamId: 't10', awayTeamId: 't11', homeScore: null, awayScore: null, date: '9 مارس', time: '23:15', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'C', round: 'الجولة الأولى' },
-        { id: 'm8', homeTeamId: 't13', awayTeamId: 't14', homeScore: null, awayScore: null, date: '9 مارس', time: '23:15', stadium: 'الملعب الاول', status: 'SCHEDULED', group: 'D', round: 'الجولة الأولى' },
-        { id: 'm9', homeTeamId: 't15', awayTeamId: 't16', homeScore: null, awayScore: null, date: '10 مارس', time: '22:00', stadium: 'الملعب الرئيسي', status: 'SCHEDULED', group: 'D', round: 'الجولة الأولى' },
-      ];
+      
+  // ------------------------------------------
+  // المجموعة الأولى (Group A)
+  // الفرق: t1 (المزرعة), t2 (الجامعة), t3 (جرين بلازا إن), t4 (رجب موتورز)
+  // ------------------------------------------
+  
+  // --- الذهاب (First Leg) ---
+  { id: 'm1', homeTeamId: 't1', awayTeamId: 't2', homeScore: null, awayScore: null, date: '9 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'الجولة الأولى - ذهاب' },
+  { id: 'm2', homeTeamId: 't3', awayTeamId: 't4', homeScore: null, awayScore: null, date: '9 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'الجولة الأولى - ذهاب' },
+  
+  { id: 'm3', homeTeamId: 't1', awayTeamId: 't3', homeScore: null, awayScore: null, date: '12 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'الجولة الثانية - ذهاب' },
+  { id: 'm4', homeTeamId: 't2', awayTeamId: 't4', homeScore: null, awayScore: null, date: '12 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'الجولة الثانية - ذهاب' },
+  
+  { id: 'm5', homeTeamId: 't1', awayTeamId: 't4', homeScore: null, awayScore: null, date: '15 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'الجولة الثالثة - ذهاب' },
+  { id: 'm6', homeTeamId: 't2', awayTeamId: 't3', homeScore: null, awayScore: null, date: '15 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'الجولة الثالثة - ذهاب' },
 
-      // مباريات خروج المغلوب (استبدل null بمعرف الفريق عند تحديده)
-      const KNOCKOUT_MATCHES = [
-        // Quarter Finals
-        { id: 'qf1', homeTeamId: null, awayTeamId: null, stage: 'ربع النهائي', title: 'ربع النهائي 1', date: 'TBD', time: '22:00', stadium: 'الملعب الرئيسي', status: 'SCHEDULED' },
-        { id: 'qf2', homeTeamId: null, awayTeamId: null, stage: 'ربع النهائي', title: 'ربع النهائي 2', date: 'TBD', time: '23:30', stadium: 'الملعب الرئيسي', status: 'SCHEDULED' },
-        { id: 'qf3', homeTeamId: null, awayTeamId: null, stage: 'ربع النهائي', title: 'ربع النهائي 3', date: 'TBD', time: '22:00', stadium: 'الملعب الرئيسي', status: 'SCHEDULED' },
-        { id: 'qf4', homeTeamId: null, awayTeamId: null, stage: 'ربع النهائي', title: 'ربع النهائي 4', date: 'TBD', time: '23:30', stadium: 'الملعب الرئيسي', status: 'SCHEDULED' },
-        // Semi Finals
-        { id: 'sf1', homeTeamId: null, awayTeamId: null, stage: 'نصف النهائي', title: 'نصف النهائي 1', date: 'TBD', time: '22:00', stadium: 'الملعب الرئيسي', status: 'SCHEDULED' },
-        { id: 'sf2', homeTeamId: null, awayTeamId: null, stage: 'نصف النهائي', title: 'نصف النهائي 2', date: 'TBD', time: '23:30', stadium: 'الملعب الرئيسي', status: 'SCHEDULED' },
-        // Final
-        { id: 'f1', homeTeamId: null, awayTeamId: null, stage: 'النهائي', title: 'النهائي', date: 'TBD', time: '22:30', stadium: 'الملعب الرئيسي', status: 'SCHEDULED' },
-      ];
+  // --- العودة (Second Leg) ---
+  { id: 'm7', homeTeamId: 't2', awayTeamId: 't1', homeScore: null, awayScore: null, date: '18 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'الجولة الرابعة - عودة' },
+  { id: 'm8', homeTeamId: 't4', awayTeamId: 't3', homeScore: null, awayScore: null, date: '18 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'الجولة الرابعة - عودة' },
+  
+  { id: 'm9', homeTeamId: 't3', awayTeamId: 't1', homeScore: null, awayScore: null, date: '21 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'الجولة الخامسة - عودة' },
+  { id: 'm10', homeTeamId: 't4', awayTeamId: 't2', homeScore: null, awayScore: null, date: '21 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'الجولة الخامسة - عودة' },
+  
+  { id: 'm11', homeTeamId: 't4', awayTeamId: 't1', homeScore: null, awayScore: null, date: '24 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'الجولة السادسة - عودة' },
+  { id: 'm12', homeTeamId: 't3', awayTeamId: 't2', homeScore: null, awayScore: null, date: '24 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'الجولة السادسة - عودة' },
+
+
+  // ------------------------------------------
+  // المجموعة الثانية (Group B)
+  // الفرق: t5 (جرين بلازا 1), t6 (بيرميديون), t7 (هيلتون كينج رانش), t8 (المعهد)
+  // ------------------------------------------
+
+  // --- الذهاب ---
+  { id: 'm13', homeTeamId: 't5', awayTeamId: 't6', homeScore: null, awayScore: null, date: '10 مارس', time: '20:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'الجولة الأولى - ذهاب' },
+  { id: 'm14', homeTeamId: 't7', awayTeamId: 't8', homeScore: null, awayScore: null, date: '10 مارس', time: '21:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'الجولة الأولى - ذهاب' },
+
+  { id: 'm15', homeTeamId: 't5', awayTeamId: 't7', homeScore: null, awayScore: null, date: '13 مارس', time: '20:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'الجولة الثانية - ذهاب' },
+  { id: 'm16', homeTeamId: 't6', awayTeamId: 't8', homeScore: null, awayScore: null, date: '13 مارس', time: '21:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'الجولة الثانية - ذهاب' },
+
+  { id: 'm17', homeTeamId: 't5', awayTeamId: 't8', homeScore: null, awayScore: null, date: '16 مارس', time: '20:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'الجولة الثالثة - ذهاب' },
+  { id: 'm18', homeTeamId: 't6', awayTeamId: 't7', homeScore: null, awayScore: null, date: '16 مارس', time: '21:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'الجولة الثالثة - ذهاب' },
+
+  // --- العودة ---
+  { id: 'm19', homeTeamId: 't6', awayTeamId: 't5', homeScore: null, awayScore: null, date: '19 مارس', time: '20:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'الجولة الرابعة - عودة' },
+  { id: 'm20', homeTeamId: 't8', awayTeamId: 't7', homeScore: null, awayScore: null, date: '19 مارس', time: '21:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'الجولة الرابعة - عودة' },
+
+  { id: 'm21', homeTeamId: 't7', awayTeamId: 't5', homeScore: null, awayScore: null, date: '22 مارس', time: '20:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'الجولة الخامسة - عودة' },
+  { id: 'm22', homeTeamId: 't8', awayTeamId: 't6', homeScore: null, awayScore: null, date: '22 مارس', time: '21:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'الجولة الخامسة - عودة' },
+
+  { id: 'm23', homeTeamId: 't8', awayTeamId: 't5', homeScore: null, awayScore: null, date: '25 مارس', time: '20:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'الجولة السادسة - عودة' },
+  { id: 'm24', homeTeamId: 't7', awayTeamId: 't6', homeScore: null, awayScore: null, date: '25 مارس', time: '21:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'الجولة السادسة - عودة' },
+
+
+  // ------------------------------------------
+  // المجموعة الثالثة (Group C)
+  // الفرق: t9 (الملاعب), t10 (جرين بلازا 2), t11 (سينما), t12 (فرينزى ستاشين)
+  // ------------------------------------------
+
+  // --- الذهاب ---
+  { id: 'm25', homeTeamId: 't9', awayTeamId: 't10', homeScore: null, awayScore: null, date: '11 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'الجولة الأولى - ذهاب' },
+  { id: 'm26', homeTeamId: 't11', awayTeamId: 't12', homeScore: null, awayScore: null, date: '11 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'الجولة الأولى - ذهاب' },
+
+  { id: 'm27', homeTeamId: 't9', awayTeamId: 't11', homeScore: null, awayScore: null, date: '14 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'الجولة الثانية - ذهاب' },
+  { id: 'm28', homeTeamId: 't10', awayTeamId: 't12', homeScore: null, awayScore: null, date: '14 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'الجولة الثانية - ذهاب' },
+
+  { id: 'm29', homeTeamId: 't9', awayTeamId: 't12', homeScore: null, awayScore: null, date: '17 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'الجولة الثالثة - ذهاب' },
+  { id: 'm30', homeTeamId: 't10', awayTeamId: 't11', homeScore: null, awayScore: null, date: '17 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'الجولة الثالثة - ذهاب' },
+
+  // --- العودة ---
+  { id: 'm31', homeTeamId: 't10', awayTeamId: 't9', homeScore: null, awayScore: null, date: '20 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'الجولة الرابعة - عودة' },
+  { id: 'm32', homeTeamId: 't12', awayTeamId: 't11', homeScore: null, awayScore: null, date: '20 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'الجولة الرابعة - عودة' },
+
+  { id: 'm33', homeTeamId: 't11', awayTeamId: 't9', homeScore: null, awayScore: null, date: '23 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'الجولة الخامسة - عودة' },
+  { id: 'm34', homeTeamId: 't12', awayTeamId: 't10', homeScore: null, awayScore: null, date: '23 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'الجولة الخامسة - عودة' },
+
+  { id: 'm35', homeTeamId: 't12', awayTeamId: 't9', homeScore: null, awayScore: null, date: '26 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'الجولة السادسة - عودة' },
+  { id: 'm36', homeTeamId: 't11', awayTeamId: 't10', homeScore: null, awayScore: null, date: '26 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'الجولة السادسة - عودة' },
+
+
+  // ------------------------------------------
+  // المجموعة الرابعة (Group D)
+  // الفرق: t13 (هيلتون), t14 (فيوتشر ستارز), t15 (جراند بلازا), t16 (المينا الجاف)
+  // ------------------------------------------
+
+  // --- الذهاب ---
+  { id: 'm37', homeTeamId: 't13', awayTeamId: 't14', homeScore: null, awayScore: null, date: '11 مارس', time: '22:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'الجولة الأولى - ذهاب' },
+  { id: 'm38', homeTeamId: 't15', awayTeamId: 't16', homeScore: null, awayScore: null, date: '11 مارس', time: '23:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'الجولة الأولى - ذهاب' },
+
+  { id: 'm39', homeTeamId: 't13', awayTeamId: 't15', homeScore: null, awayScore: null, date: '14 مارس', time: '22:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'الجولة الثانية - ذهاب' },
+  { id: 'm40', homeTeamId: 't14', awayTeamId: 't16', homeScore: null, awayScore: null, date: '14 مارس', time: '23:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'الجولة الثانية - ذهاب' },
+
+  { id: 'm41', homeTeamId: 't13', awayTeamId: 't16', homeScore: null, awayScore: null, date: '17 مارس', time: '22:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'الجولة الثالثة - ذهاب' },
+  { id: 'm42', homeTeamId: 't14', awayTeamId: 't15', homeScore: null, awayScore: null, date: '17 مارس', time: '23:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'الجولة الثالثة - ذهاب' },
+
+  // --- العودة ---
+  { id: 'm43', homeTeamId: 't14', awayTeamId: 't13', homeScore: null, awayScore: null, date: '20 مارس', time: '22:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'الجولة الرابعة - عودة' },
+  { id: 'm44', homeTeamId: 't16', awayTeamId: 't15', homeScore: null, awayScore: null, date: '20 مارس', time: '23:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'الجولة الرابعة - عودة' },
+
+  { id: 'm45', homeTeamId: 't15', awayTeamId: 't13', homeScore: null, awayScore: null, date: '23 مارس', time: '22:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'الجولة الخامسة - عودة' },
+  { id: 'm46', homeTeamId: 't16', awayTeamId: 't14', homeScore: null, awayScore: null, date: '23 مارس', time: '23:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'الجولة الخامسة - عودة' },
+
+  { id: 'm47', homeTeamId: 't16', awayTeamId: 't13', homeScore: null, awayScore: null, date: '26 مارس', time: '22:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'الجولة السادسة - عودة' },
+  { id: 'm48', homeTeamId: 't15', awayTeamId: 't14', homeScore: null, awayScore: null, date: '26 مارس', time: '23:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'الجولة السادسة - عودة' },
+
+
+  // ==========================================
+  // ربع النهائي (Quarter Finals)
+  // يتم ملء IDs الفرق برمجياً بعد انتهاء المجموعات
+  // ==========================================
+  
+  // (المسار الأيمن - Right Bracket) - يضم المجموعات A و B
+  { id: 'qf1', homeTeamId: 'A_1ST', awayTeamId: 'B_2ND', homeScore: null, awayScore: null, date: '29 مارس', time: '20:00', stadium: 'الملعب الرئيسي', status: 'PENDING', round: 'ربع النهائي' },
+  { id: 'qf2', homeTeamId: 'B_1ST', awayTeamId: 'A_2ND', homeScore: null, awayScore: null, date: '29 مارس', time: '21:30', stadium: 'الملعب الرئيسي', status: 'PENDING', round: 'ربع النهائي' },
+
+  // (المسار الأيسر - Left Bracket) - يضم المجموعات C و D
+  { id: 'qf3', homeTeamId: 'C_1ST', awayTeamId: 'D_2ND', homeScore: null, awayScore: null, date: '30 مارس', time: '20:00', stadium: 'الملعب الرئيسي', status: 'PENDING', round: 'ربع النهائي' },
+  { id: 'qf4', homeTeamId: 'D_1ST', awayTeamId: 'C_2ND', homeScore: null, awayScore: null, date: '30 مارس', time: '21:30', stadium: 'الملعب الرئيسي', status: 'PENDING', round: 'ربع النهائي' },
+
+  // ==========================================
+  // نصف النهائي (Semi Finals)
+  // ==========================================
+  
+  // الفائز من المسار الأيمن (يحتمل وجود t1 المزرعة هنا)
+  { id: 'sf1', homeTeamId: 'WINNER_QF1', awayTeamId: 'WINNER_QF2', homeScore: null, awayScore: null, date: '2 أبريل', time: '21:00', stadium: 'الملعب الرئيسي', status: 'PENDING', round: 'نصف النهائي' },
+
+  // الفائز من المسار الأيسر (يحتمل وجود t9 الملاعب هنا)
+  { id: 'sf2', homeTeamId: 'WINNER_QF3', awayTeamId: 'WINNER_QF4', homeScore: null, awayScore: null, date: '3 أبريل', time: '21:00', stadium: 'الملعب الرئيسي', status: 'PENDING', round: 'نصف النهائي' },
+
+  // ==========================================
+  // النهائي (Final)
+  // ==========================================
+  
+  // اللقاء الحاسم
+  { id: 'final', homeTeamId: 'WINNER_SF1', awayTeamId: 'WINNER_SF2', homeScore: null, awayScore: null, date: '6 أبريل', time: '22:00', stadium: 'استاد البطولة', status: 'PENDING', round: 'النهائي' }
+];
 
       // قائمة الهدافين
       const PLAYERS = [
