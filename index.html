@@ -3,60 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>بطولة رجب الرمضانية الثانية</title>
-    
-    <!-- Tailwind CSS -->
+    <title>جدول بطولة رجب - المتوازي</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.min.js"></script>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    
     <script>
       tailwind.config = {
         theme: {
           extend: {
-            fontFamily: {
-              cairo: ['Cairo', 'sans-serif'],
-            },
+            fontFamily: { cairo: ['Cairo', 'sans-serif'] },
             colors: {
-              navy: {
-                800: '#0f172a',
-                900: '#051024',
-              },
-              gold: {
-                400: '#FFD700',
-                500: '#E6C200',
-                100: '#FFF9C4',
-              },
-              gray: {
-                50: '#F9FAFB',
-                100: '#F3F4F6',
-                200: '#E5E7EB',
-                800: '#1F2937',
-              }
+              navy: { 800: '#0f172a', 900: '#051024' },
+              gold: { 400: '#FFD700', 500: '#E6C200', 100: '#FFF9C4' },
             }
           }
         }
       }
     </script>
     <style>
-      body {
-        font-family: 'Cairo', sans-serif;
-        background-color: #f3f4f6;
-      }
+      body { font-family: 'Cairo', sans-serif; background-color: #f3f4f6; }
       .scrollbar-hide::-webkit-scrollbar { display: none; }
-      .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
       .fade-in { animation: fadeIn 0.3s ease-in-out; }
       @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
-</head>
+  </head>
   <body class="bg-gray-100 min-h-screen pb-20 text-gray-800">
-    <!-- Header -->
     <header class="bg-navy-900 text-white sticky top-0 z-50 shadow-xl border-b border-navy-800">
       <div class="max-w-md mx-auto px-4 py-4 flex items-center justify-between">
          <div class="flex items-center gap-3">
@@ -68,432 +39,207 @@
              <p class="text-xs text-gray-400">الرمضانية الثانية</p>
            </div>
          </div>
-         <div class="text-xs bg-navy-800 px-3 py-1 rounded-full text-gold-400 border border-navy-700 shadow-inner">
-           موسم 1446
-         </div>
       </div>
-      <!-- Navigation Tabs -->
       <div class="max-w-md mx-auto px-2 mt-2 pb-2">
-        <div class="flex bg-navy-800/50 p-1 rounded-xl border border-navy-700/50" id="nav-tabs">
-          <div class="p-2 w-full text-center text-xs text-gray-400">جاري التحميل...</div>
-        </div>
+        <div class="flex bg-navy-800/50 p-1 rounded-xl border border-navy-700/50" id="nav-tabs"></div>
       </div>
     </header>
 
     <main id="app-content" class="max-w-md mx-auto px-4 py-6 space-y-4">
-       <div class="text-center py-10 text-gray-500">جاري تحميل البيانات...</div>
+       <div class="text-center py-10 text-gray-500">جاري تحميل الجدول...</div>
     </main>
 
-    <footer class="text-center py-6 text-gray-400 text-xs border-t border-gray-200 mt-8">
-      <p class="font-bold text-navy-900">&copy; 2025 بطولة رجب الرمضانية الثانية</p>
-    </footer>
-
-    <!-- Main Logic Script -->
     <script>
       // ==========================================
       // DATA CONFIGURATION
       // ==========================================
-
-      // 1. تعريف الفرق (IDs الجديدة حسب المجموعات)
       const TEAMS = [
-        // Group A (المزرعة هنا)
+        // Group A
         { id: 't1', name: 'المزرعة', group: 'A', logoColor: 'bg-blue-600' },
         { id: 't2', name: 'الجامعة', group: 'A', logoColor: 'bg-red-600' },
         { id: 't3', name: 'جرين بلازا إن', group: 'A', logoColor: 'bg-green-500' },
         { id: 't4', name: 'رجب موتورز', group: 'A', logoColor: 'bg-gray-800' },
-        
-        // Group B (جرين بلازا 1 هنا)
+        // Group B
         { id: 't5', name: 'جرين بلازا 1', group: 'B', logoColor: 'bg-green-700' },
         { id: 't6', name: 'بيرميديون', group: 'B', logoColor: 'bg-yellow-600' },
         { id: 't7', name: 'هيلتون كينج رانش', group: 'B', logoColor: 'bg-indigo-600' },
-        { id: 't8', name: 'سينما', group: 'B', logoColor: 'bg-red-500' },
-        
-        // Group C (الملاعب هنا - المسار المعاكس للمزرعة)
+        { id: 't8', name: 'السينما', group: 'B', logoColor: 'bg-red-500' },
+        // Group C
         { id: 't9', name: 'الملاعب', group: 'C', logoColor: 'bg-blue-800' },
         { id: 't10', name: 'جرين بلازا 2', group: 'C', logoColor: 'bg-green-400' },
         { id: 't11', name: 'المعهد', group: 'C', logoColor: 'bg-black' },
         { id: 't12', name: 'الملاهي', group: 'C', logoColor: 'bg-pink-600' },
-        
-        // Group D (هيلتون هنا)
+        // Group D
         { id: 't13', name: 'هيلتون', group: 'D', logoColor: 'bg-cyan-700' },
         { id: 't14', name: 'فيوتشر ستارز', group: 'D', logoColor: 'bg-orange-500' },
         { id: 't15', name: 'جراند بلازا', group: 'D', logoColor: 'bg-teal-600' },
         { id: 't16', name: 'المينا الجاف', group: 'D', logoColor: 'bg-purple-700' },
       ];
 
-      // 2. سجل المباريات (48 مباراة - ذهاب وعودة)
+      /* 
+         الاستراتيجية المتبعة للتوازي (Balanced Schedule):
+         مدة الحجز 3 ساعات = 180 دقيقة.
+         كل فريق يلعب مباراتين في اليوم.
+         
+         نظام التبادل (Interleaving):
+         - الفترة 1 (أول 40 دقيقة): مباريات المجموعة A و B.
+         - الفترة 2 (ثاني 40 دقيقة): مباريات المجموعة C و D.
+         - الفترة 3 (ثالث 40 دقيقة): عودة للمجموعة A و B (الجولة التالية).
+         - الفترة 4 (رابع 40 دقيقة): عودة للمجموعة C و D (الجولة التالية).
+         
+         النتيجة: كل الفرق تنهي اليوم وقد لعبت نفس عدد الدقائق والمباريات.
+      */
+
       const MATCHES = [
-        // --- Group A (First Leg) ---
-        { id: 'm1', homeTeamId: 't1', awayTeamId: 't2', homeScore: null, awayScore: null, date: '9 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'ج1 - ذهاب', details: { scorers: [] } },
-        { id: 'm2', homeTeamId: 't3', awayTeamId: 't4', homeScore: null, awayScore: null, date: '9 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'ج1 - ذهاب', details: { scorers: [] } },
-        { id: 'm3', homeTeamId: 't1', awayTeamId: 't3', homeScore: null, awayScore: null, date: '12 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'ج2 - ذهاب', details: { scorers: [] } },
-        { id: 'm4', homeTeamId: 't2', awayTeamId: 't4', homeScore: null, awayScore: null, date: '12 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'ج2 - ذهاب', details: { scorers: [] } },
-        { id: 'm5', homeTeamId: 't1', awayTeamId: 't4', homeScore: null, awayScore: null, date: '15 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'ج3 - ذهاب', details: { scorers: [] } },
-        { id: 'm6', homeTeamId: 't2', awayTeamId: 't3', homeScore: null, awayScore: null, date: '15 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'ج3 - ذهاب', details: { scorers: [] } },
+        // ========================================================
+        // اليوم الأول: 2 مارس (يبدأ 21:00) - الجولة 1 و 2
+        // ========================================================
+        
+        // --- الفترة الأولى (A & B - الجولة 1) ---
+        { id: 'd1_1', homeTeamId: 't1', awayTeamId: 't2', homeScore: null, awayScore: null, date: '2 مارس', time: '21:00', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'A', round: 'ج1 - ذهاب', details: { scorers: [] } },
+        { id: 'd1_2', homeTeamId: 't5', awayTeamId: 't6', homeScore: null, awayScore: null, date: '2 مارس', time: '21:00', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'B', round: 'ج1 - ذهاب', details: { scorers: [] } },
+        { id: 'd1_3', homeTeamId: 't3', awayTeamId: 't4', homeScore: null, awayScore: null, date: '2 مارس', time: '21:20', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'A', round: 'ج1 - ذهاب', details: { scorers: [] } },
+        { id: 'd1_4', homeTeamId: 't7', awayTeamId: 't8', homeScore: null, awayScore: null, date: '2 مارس', time: '21:20', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'B', round: 'ج1 - ذهاب', details: { scorers: [] } },
 
-        // --- Group A (Second Leg) ---
-        { id: 'm7', homeTeamId: 't2', awayTeamId: 't1', homeScore: null, awayScore: null, date: '18 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'ج4 - عودة', details: { scorers: [] } },
-        { id: 'm8', homeTeamId: 't4', awayTeamId: 't3', homeScore: null, awayScore: null, date: '18 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'ج4 - عودة', details: { scorers: [] } },
-        { id: 'm9', homeTeamId: 't3', awayTeamId: 't1', homeScore: null, awayScore: null, date: '21 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'ج5 - عودة', details: { scorers: [] } },
-        { id: 'm10', homeTeamId: 't4', awayTeamId: 't2', homeScore: null, awayScore: null, date: '21 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'ج5 - عودة', details: { scorers: [] } },
-        { id: 'm11', homeTeamId: 't4', awayTeamId: 't1', homeScore: null, awayScore: null, date: '24 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'ج6 - عودة', details: { scorers: [] } },
-        { id: 'm12', homeTeamId: 't3', awayTeamId: 't2', homeScore: null, awayScore: null, date: '24 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'A', round: 'ج6 - عودة', details: { scorers: [] } },
+        // --- الفترة الثانية (C & D - الجولة 1) ---
+        // نعطي راحة لـ A و B وندخل C و D
+        { id: 'd1_5', homeTeamId: 't9', awayTeamId: 't10', homeScore: null, awayScore: null, date: '2 مارس', time: '21:40', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'C', round: 'ج1 - ذهاب', details: { scorers: [] } },
+        { id: 'd1_6', homeTeamId: 't13', awayTeamId: 't14', homeScore: null, awayScore: null, date: '2 مارس', time: '21:40', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'D', round: 'ج1 - ذهاب', details: { scorers: [] } },
+        { id: 'd1_7', homeTeamId: 't11', awayTeamId: 't12', homeScore: null, awayScore: null, date: '2 مارس', time: '22:00', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'C', round: 'ج1 - ذهاب', details: { scorers: [] } },
+        { id: 'd1_8', homeTeamId: 't15', awayTeamId: 't16', homeScore: null, awayScore: null, date: '2 مارس', time: '22:00', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'D', round: 'ج1 - ذهاب', details: { scorers: [] } },
 
-        // --- Group B (First Leg) ---
-        { id: 'm13', homeTeamId: 't5', awayTeamId: 't6', homeScore: null, awayScore: null, date: '10 مارس', time: '20:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'ج1 - ذهاب', details: { scorers: [] } },
-        { id: 'm14', homeTeamId: 't7', awayTeamId: 't8', homeScore: null, awayScore: null, date: '10 مارس', time: '21:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'ج1 - ذهاب', details: { scorers: [] } },
-        { id: 'm15', homeTeamId: 't5', awayTeamId: 't7', homeScore: null, awayScore: null, date: '13 مارس', time: '20:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'ج2 - ذهاب', details: { scorers: [] } },
-        { id: 'm16', homeTeamId: 't6', awayTeamId: 't8', homeScore: null, awayScore: null, date: '13 مارس', time: '21:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'ج2 - ذهاب', details: { scorers: [] } },
-        { id: 'm17', homeTeamId: 't5', awayTeamId: 't8', homeScore: null, awayScore: null, date: '16 مارس', time: '20:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'ج3 - ذهاب', details: { scorers: [] } },
-        { id: 'm18', homeTeamId: 't6', awayTeamId: 't7', homeScore: null, awayScore: null, date: '16 مارس', time: '21:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'ج3 - ذهاب', details: { scorers: [] } },
+        // --- الفترة الثالثة (A & B - الجولة 2) ---
+        { id: 'd1_9', homeTeamId: 't1', awayTeamId: 't3', homeScore: null, awayScore: null, date: '2 مارس', time: '22:20', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'A', round: 'ج2 - ذهاب', details: { scorers: [] } },
+        { id: 'd1_10', homeTeamId: 't5', awayTeamId: 't7', homeScore: null, awayScore: null, date: '2 مارس', time: '22:20', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'B', round: 'ج2 - ذهاب', details: { scorers: [] } },
+        { id: 'd1_11', homeTeamId: 't2', awayTeamId: 't4', homeScore: null, awayScore: null, date: '2 مارس', time: '22:40', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'A', round: 'ج2 - ذهاب', details: { scorers: [] } },
+        { id: 'd1_12', homeTeamId: 't6', awayTeamId: 't8', homeScore: null, awayScore: null, date: '2 مارس', time: '22:40', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'B', round: 'ج2 - ذهاب', details: { scorers: [] } },
 
-        // --- Group B (Second Leg) ---
-        { id: 'm19', homeTeamId: 't6', awayTeamId: 't5', homeScore: null, awayScore: null, date: '19 مارس', time: '20:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'ج4 - عودة', details: { scorers: [] } },
-        { id: 'm20', homeTeamId: 't8', awayTeamId: 't7', homeScore: null, awayScore: null, date: '19 مارس', time: '21:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'ج4 - عودة', details: { scorers: [] } },
-        { id: 'm21', homeTeamId: 't7', awayTeamId: 't5', homeScore: null, awayScore: null, date: '22 مارس', time: '20:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'ج5 - عودة', details: { scorers: [] } },
-        { id: 'm22', homeTeamId: 't8', awayTeamId: 't6', homeScore: null, awayScore: null, date: '22 مارس', time: '21:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'ج5 - عودة', details: { scorers: [] } },
-        { id: 'm23', homeTeamId: 't8', awayTeamId: 't5', homeScore: null, awayScore: null, date: '25 مارس', time: '20:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'ج6 - عودة', details: { scorers: [] } },
-        { id: 'm24', homeTeamId: 't7', awayTeamId: 't6', homeScore: null, awayScore: null, date: '25 مارس', time: '21:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'B', round: 'ج6 - عودة', details: { scorers: [] } },
+        // --- الفترة الرابعة (C & D - الجولة 2) ---
+        { id: 'd1_13', homeTeamId: 't9', awayTeamId: 't11', homeScore: null, awayScore: null, date: '2 مارس', time: '23:00', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'C', round: 'ج2 - ذهاب', details: { scorers: [] } },
+        { id: 'd1_14', homeTeamId: 't13', awayTeamId: 't15', homeScore: null, awayScore: null, date: '2 مارس', time: '23:00', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'D', round: 'ج2 - ذهاب', details: { scorers: [] } },
+        { id: 'd1_15', homeTeamId: 't10', awayTeamId: 't12', homeScore: null, awayScore: null, date: '2 مارس', time: '23:20', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'C', round: 'ج2 - ذهاب', details: { scorers: [] } },
+        { id: 'd1_16', homeTeamId: 't14', awayTeamId: 't16', homeScore: null, awayScore: null, date: '2 مارس', time: '23:20', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'D', round: 'ج2 - ذهاب', details: { scorers: [] } },
 
-        // --- Group C (First Leg) ---
-        { id: 'm25', homeTeamId: 't9', awayTeamId: 't10', homeScore: null, awayScore: null, date: '11 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'ج1 - ذهاب', details: { scorers: [] } },
-        { id: 'm26', homeTeamId: 't11', awayTeamId: 't12', homeScore: null, awayScore: null, date: '11 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'ج1 - ذهاب', details: { scorers: [] } },
-        { id: 'm27', homeTeamId: 't9', awayTeamId: 't11', homeScore: null, awayScore: null, date: '14 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'ج2 - ذهاب', details: { scorers: [] } },
-        { id: 'm28', homeTeamId: 't10', awayTeamId: 't12', homeScore: null, awayScore: null, date: '14 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'ج2 - ذهاب', details: { scorers: [] } },
-        { id: 'm29', homeTeamId: 't9', awayTeamId: 't12', homeScore: null, awayScore: null, date: '17 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'ج3 - ذهاب', details: { scorers: [] } },
-        { id: 'm30', homeTeamId: 't10', awayTeamId: 't11', homeScore: null, awayScore: null, date: '17 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'ج3 - ذهاب', details: { scorers: [] } },
 
-        // --- Group C (Second Leg) ---
-        { id: 'm31', homeTeamId: 't10', awayTeamId: 't9', homeScore: null, awayScore: null, date: '20 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'ج4 - عودة', details: { scorers: [] } },
-        { id: 'm32', homeTeamId: 't12', awayTeamId: 't11', homeScore: null, awayScore: null, date: '20 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'ج4 - عودة', details: { scorers: [] } },
-        { id: 'm33', homeTeamId: 't11', awayTeamId: 't9', homeScore: null, awayScore: null, date: '23 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'ج5 - عودة', details: { scorers: [] } },
-        { id: 'm34', homeTeamId: 't12', awayTeamId: 't10', homeScore: null, awayScore: null, date: '23 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'ج5 - عودة', details: { scorers: [] } },
-        { id: 'm35', homeTeamId: 't12', awayTeamId: 't9', homeScore: null, awayScore: null, date: '26 مارس', time: '20:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'ج6 - عودة', details: { scorers: [] } },
-        { id: 'm36', homeTeamId: 't11', awayTeamId: 't10', homeScore: null, awayScore: null, date: '26 مارس', time: '21:00', stadium: 'الملعب الأول', status: 'SCHEDULED', group: 'C', round: 'ج6 - عودة', details: { scorers: [] } },
+        // ========================================================
+        // اليوم الثاني: 3 مارس (يبدأ 22:00) - الجولة 3 و 4
+        // ========================================================
 
-        // --- Group D (First Leg) ---
-        { id: 'm37', homeTeamId: 't13', awayTeamId: 't14', homeScore: null, awayScore: null, date: '11 مارس', time: '22:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'ج1 - ذهاب', details: { scorers: [] } },
-        { id: 'm38', homeTeamId: 't15', awayTeamId: 't16', homeScore: null, awayScore: null, date: '11 مارس', time: '23:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'ج1 - ذهاب', details: { scorers: [] } },
-        { id: 'm39', homeTeamId: 't13', awayTeamId: 't15', homeScore: null, awayScore: null, date: '14 مارس', time: '22:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'ج2 - ذهاب', details: { scorers: [] } },
-        { id: 'm40', homeTeamId: 't14', awayTeamId: 't16', homeScore: null, awayScore: null, date: '14 مارس', time: '23:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'ج2 - ذهاب', details: { scorers: [] } },
-        { id: 'm41', homeTeamId: 't13', awayTeamId: 't16', homeScore: null, awayScore: null, date: '17 مارس', time: '22:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'ج3 - ذهاب', details: { scorers: [] } },
-        { id: 'm42', homeTeamId: 't14', awayTeamId: 't15', homeScore: null, awayScore: null, date: '17 مارس', time: '23:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'ج3 - ذهاب', details: { scorers: [] } },
+        // --- الفترة الأولى (A & B - الجولة 3 - نهاية الذهاب) ---
+        { id: 'd2_1', homeTeamId: 't1', awayTeamId: 't4', homeScore: null, awayScore: null, date: '3 مارس', time: '22:00', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'A', round: 'ج3 - ذهاب', details: { scorers: [] } },
+        { id: 'd2_2', homeTeamId: 't5', awayTeamId: 't8', homeScore: null, awayScore: null, date: '3 مارس', time: '22:00', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'B', round: 'ج3 - ذهاب', details: { scorers: [] } },
+        { id: 'd2_3', homeTeamId: 't2', awayTeamId: 't3', homeScore: null, awayScore: null, date: '3 مارس', time: '22:20', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'A', round: 'ج3 - ذهاب', details: { scorers: [] } },
+        { id: 'd2_4', homeTeamId: 't6', awayTeamId: 't7', homeScore: null, awayScore: null, date: '3 مارس', time: '22:20', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'B', round: 'ج3 - ذهاب', details: { scorers: [] } },
 
-        // --- Group D (Second Leg) ---
-        { id: 'm43', homeTeamId: 't14', awayTeamId: 't13', homeScore: null, awayScore: null, date: '20 مارس', time: '22:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'ج4 - عودة', details: { scorers: [] } },
-        { id: 'm44', homeTeamId: 't16', awayTeamId: 't15', homeScore: null, awayScore: null, date: '20 مارس', time: '23:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'ج4 - عودة', details: { scorers: [] } },
-        { id: 'm45', homeTeamId: 't15', awayTeamId: 't13', homeScore: null, awayScore: null, date: '23 مارس', time: '22:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'ج5 - عودة', details: { scorers: [] } },
-        { id: 'm46', homeTeamId: 't16', awayTeamId: 't14', homeScore: null, awayScore: null, date: '23 مارس', time: '23:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'ج5 - عودة', details: { scorers: [] } },
-        { id: 'm47', homeTeamId: 't16', awayTeamId: 't13', homeScore: null, awayScore: null, date: '26 مارس', time: '22:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'ج6 - عودة', details: { scorers: [] } },
-        { id: 'm48', homeTeamId: 't15', awayTeamId: 't14', homeScore: null, awayScore: null, date: '26 مارس', time: '23:00', stadium: 'الملعب الثاني', status: 'SCHEDULED', group: 'D', round: 'ج6 - عودة', details: { scorers: [] } },
+        // --- الفترة الثانية (C & D - الجولة 3 - نهاية الذهاب) ---
+        { id: 'd2_5', homeTeamId: 't9', awayTeamId: 't12', homeScore: null, awayScore: null, date: '3 مارس', time: '22:40', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'C', round: 'ج3 - ذهاب', details: { scorers: [] } },
+        { id: 'd2_6', homeTeamId: 't13', awayTeamId: 't16', homeScore: null, awayScore: null, date: '3 مارس', time: '22:40', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'D', round: 'ج3 - ذهاب', details: { scorers: [] } },
+        { id: 'd2_7', homeTeamId: 't10', awayTeamId: 't11', homeScore: null, awayScore: null, date: '3 مارس', time: '23:00', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'C', round: 'ج3 - ذهاب', details: { scorers: [] } },
+        { id: 'd2_8', homeTeamId: 't14', awayTeamId: 't15', homeScore: null, awayScore: null, date: '3 مارس', time: '23:00', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'D', round: 'ج3 - ذهاب', details: { scorers: [] } },
+
+        // --- الفترة الثالثة (A & B - الجولة 4 - بداية العودة) ---
+        // تبديل الملاعب (Home/Away Swap in logic only, teams stay same ID)
+        { id: 'd2_9', homeTeamId: 't2', awayTeamId: 't1', homeScore: null, awayScore: null, date: '3 مارس', time: '23:20', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'A', round: 'ج4 - عودة', details: { scorers: [] } },
+        { id: 'd2_10', homeTeamId: 't6', awayTeamId: 't5', homeScore: null, awayScore: null, date: '3 مارس', time: '23:20', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'B', round: 'ج4 - عودة', details: { scorers: [] } },
+        { id: 'd2_11', homeTeamId: 't4', awayTeamId: 't3', homeScore: null, awayScore: null, date: '3 مارس', time: '23:40', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'A', round: 'ج4 - عودة', details: { scorers: [] } },
+        { id: 'd2_12', homeTeamId: 't8', awayTeamId: 't7', homeScore: null, awayScore: null, date: '3 مارس', time: '23:40', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'B', round: 'ج4 - عودة', details: { scorers: [] } },
+
+        // --- الفترة الرابعة (C & D - الجولة 4 - بداية العودة) ---
+        { id: 'd2_13', homeTeamId: 't10', awayTeamId: 't9', homeScore: null, awayScore: null, date: '3 مارس', time: '00:00', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'C', round: 'ج4 - عودة', details: { scorers: [] } },
+        { id: 'd2_14', homeTeamId: 't14', awayTeamId: 't13', homeScore: null, awayScore: null, date: '3 مارس', time: '00:00', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'D', round: 'ج4 - عودة', details: { scorers: [] } },
+        { id: 'd2_15', homeTeamId: 't12', awayTeamId: 't11', homeScore: null, awayScore: null, date: '3 مارس', time: '00:20', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'C', round: 'ج4 - عودة', details: { scorers: [] } },
+        { id: 'd2_16', homeTeamId: 't16', awayTeamId: 't15', homeScore: null, awayScore: null, date: '3 مارس', time: '00:20', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'D', round: 'ج4 - عودة', details: { scorers: [] } },
+
+
+        // ========================================================
+        // اليوم الثالث: 4 مارس (يبدأ 22:00) - الجولة 5 و 6
+        // ========================================================
+
+        // --- الفترة الأولى (A & B - الجولة 5) ---
+        { id: 'd3_1', homeTeamId: 't3', awayTeamId: 't1', homeScore: null, awayScore: null, date: '4 مارس', time: '22:00', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'A', round: 'ج5 - عودة', details: { scorers: [] } },
+        { id: 'd3_2', homeTeamId: 't7', awayTeamId: 't5', homeScore: null, awayScore: null, date: '4 مارس', time: '22:00', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'B', round: 'ج5 - عودة', details: { scorers: [] } },
+        { id: 'd3_3', homeTeamId: 't4', awayTeamId: 't2', homeScore: null, awayScore: null, date: '4 مارس', time: '22:20', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'A', round: 'ج5 - عودة', details: { scorers: [] } },
+        { id: 'd3_4', homeTeamId: 't8', awayTeamId: 't6', homeScore: null, awayScore: null, date: '4 مارس', time: '22:20', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'B', round: 'ج5 - عودة', details: { scorers: [] } },
+
+        // --- الفترة الثانية (C & D - الجولة 5) ---
+        { id: 'd3_5', homeTeamId: 't11', awayTeamId: 't9', homeScore: null, awayScore: null, date: '4 مارس', time: '22:40', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'C', round: 'ج5 - عودة', details: { scorers: [] } },
+        { id: 'd3_6', homeTeamId: 't15', awayTeamId: 't13', homeScore: null, awayScore: null, date: '4 مارس', time: '22:40', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'D', round: 'ج5 - عودة', details: { scorers: [] } },
+        { id: 'd3_7', homeTeamId: 't12', awayTeamId: 't10', homeScore: null, awayScore: null, date: '4 مارس', time: '23:00', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'C', round: 'ج5 - عودة', details: { scorers: [] } },
+        { id: 'd3_8', homeTeamId: 't16', awayTeamId: 't14', homeScore: null, awayScore: null, date: '4 مارس', time: '23:00', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'D', round: 'ج5 - عودة', details: { scorers: [] } },
+
+        // --- الفترة الثالثة (A & B - الجولة 6 - الحاسمة) ---
+        { id: 'd3_9', homeTeamId: 't4', awayTeamId: 't1', homeScore: null, awayScore: null, date: '4 مارس', time: '23:20', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'A', round: 'ج6 - عودة', details: { scorers: [] } },
+        { id: 'd3_10', homeTeamId: 't8', awayTeamId: 't5', homeScore: null, awayScore: null, date: '4 مارس', time: '23:20', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'B', round: 'ج6 - عودة', details: { scorers: [] } },
+        { id: 'd3_11', homeTeamId: 't3', awayTeamId: 't2', homeScore: null, awayScore: null, date: '4 مارس', time: '23:40', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'A', round: 'ج6 - عودة', details: { scorers: [] } },
+        { id: 'd3_12', homeTeamId: 't7', awayTeamId: 't6', homeScore: null, awayScore: null, date: '4 مارس', time: '23:40', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'B', round: 'ج6 - عودة', details: { scorers: [] } },
+
+        // --- الفترة الرابعة (C & D - الجولة 6 - الحاسمة) ---
+        { id: 'd3_13', homeTeamId: 't12', awayTeamId: 't9', homeScore: null, awayScore: null, date: '4 مارس', time: '00:00', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'C', round: 'ج6 - عودة', details: { scorers: [] } },
+        { id: 'd3_14', homeTeamId: 't16', awayTeamId: 't13', homeScore: null, awayScore: null, date: '4 مارس', time: '00:00', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'D', round: 'ج6 - عودة', details: { scorers: [] } },
+        { id: 'd3_15', homeTeamId: 't11', awayTeamId: 't10', homeScore: null, awayScore: null, date: '4 مارس', time: '00:20', stadium: 'الملعب 1', status: 'SCHEDULED', group: 'C', round: 'ج6 - عودة', details: { scorers: [] } },
+        { id: 'd3_16', homeTeamId: 't15', awayTeamId: 't14', homeScore: null, awayScore: null, date: '4 مارس', time: '00:20', stadium: 'الملعب 2', status: 'SCHEDULED', group: 'D', round: 'ج6 - عودة', details: { scorers: [] } },
       ];
 
-      // 3. مباريات خروج المغلوب (المسار الأيمن A+B، المسار الأيسر C+D)
+      // ========================================================
+      // الأدوار الإقصائية (9 و 10 مارس)
+      // ========================================================
       const KNOCKOUT_MATCHES = [
-        // Quarter Finals - Right Bracket (A vs B)
-        { id: 'qf1', homeTeamId: null, awayTeamId: null, stage: 'ربع النهائي', title: 'أول A × ثاني B', date: '29 مارس', time: '20:00', stadium: 'الملعب الرئيسي', status: 'SCHEDULED', details: { scorers: [] } },
-        { id: 'qf2', homeTeamId: null, awayTeamId: null, stage: 'ربع النهائي', title: 'أول B × ثاني A', date: '29 مارس', time: '21:30', stadium: 'الملعب الرئيسي', status: 'SCHEDULED', details: { scorers: [] } },
+        // يوم 9 مارس - ربع النهائي (مدة المباراة 20 دقيقة)
+        { id: 'qf1', homeTeamId: null, awayTeamId: null, stage: 'ربع النهائي', title: 'أول A × ثاني B', date: '9 مارس', time: '22:00', stadium: 'الملعب 1', status: 'SCHEDULED', details: { scorers: [] } },
+        { id: 'qf2', homeTeamId: null, awayTeamId: null, stage: 'ربع النهائي', title: 'أول B × ثاني A', date: '9 مارس', time: '22:00', stadium: 'الملعب 2', status: 'SCHEDULED', details: { scorers: [] } },
+        { id: 'qf3', homeTeamId: null, awayTeamId: null, stage: 'ربع النهائي', title: 'أول C × ثاني D', date: '9 مارس', time: '22:30', stadium: 'الملعب 1', status: 'SCHEDULED', details: { scorers: [] } },
+        { id: 'qf4', homeTeamId: null, awayTeamId: null, stage: 'ربع النهائي', title: 'أول D × ثاني C', date: '9 مارس', time: '22:30', stadium: 'الملعب 2', status: 'SCHEDULED', details: { scorers: [] } },
         
-        // Quarter Finals - Left Bracket (C vs D)
-        { id: 'qf3', homeTeamId: null, awayTeamId: null, stage: 'ربع النهائي', title: 'أول C × ثاني D', date: '30 مارس', time: '20:00', stadium: 'الملعب الرئيسي', status: 'SCHEDULED', details: { scorers: [] } },
-        { id: 'qf4', homeTeamId: null, awayTeamId: null, stage: 'ربع النهائي', title: 'أول D × ثاني C', date: '30 مارس', time: '21:30', stadium: 'الملعب الرئيسي', status: 'SCHEDULED', details: { scorers: [] } },
-        
-        // Semi Finals
-        { id: 'sf1', homeTeamId: null, awayTeamId: null, stage: 'نصف النهائي', title: 'الفائز (QF1) × الفائز (QF2)', date: '2 أبريل', time: '21:00', stadium: 'الملعب الرئيسي', status: 'SCHEDULED', details: { scorers: [] } },
-        { id: 'sf2', homeTeamId: null, awayTeamId: null, stage: 'نصف النهائي', title: 'الفائز (QF3) × الفائز (QF4)', date: '3 أبريل', time: '21:00', stadium: 'الملعب الرئيسي', status: 'SCHEDULED', details: { scorers: [] } },
-        
-        // Final
-        { id: 'f1', homeTeamId: null, awayTeamId: null, stage: 'النهائي', title: 'كأس البطولة', date: '6 أبريل', time: '22:00', stadium: 'استاد البطولة', status: 'SCHEDULED', details: { scorers: [] } },
+        // يوم 10 مارس - نصف النهائي والنهائي
+        { id: 'sf1', homeTeamId: null, awayTeamId: null, stage: 'نصف النهائي', title: 'الفائز (QF1) × الفائز (QF2)', date: '10 مارس', time: '22:00', stadium: 'الملعب 1', status: 'SCHEDULED', details: { scorers: [] } },
+        { id: 'sf2', homeTeamId: null, awayTeamId: null, stage: 'نصف النهائي', title: 'الفائز (QF3) × الفائز (QF4)', date: '10 مارس', time: '22:00', stadium: 'الملعب 2', status: 'SCHEDULED', details: { scorers: [] } },
+        { id: 'f1', homeTeamId: null, awayTeamId: null, stage: 'النهائي', title: 'كأس البطولة', date: '10 مارس', time: '23:00', stadium: 'الملعب الرئيسي', status: 'SCHEDULED', details: { scorers: [] } },
       ];
 
-      // 4. قائمة الهدافين (فارغة مبدئياً)
+      // --- نفس وظائف التشغيل السابقة ---
       const PLAYERS = [];
-
-      // ==========================================
-      // LOGIC AND RENDERER
-      // ==========================================
-      
-      let state = {
-        activeTab: 'matches',
-        matchesFilter: 'ALL',
-        searchQuery: '',
-        expandedMatches: new Set(),
-        expandedGroups: new Set()
-      };
-
+      let state = { activeTab: 'matches', matchesFilter: 'ALL', searchQuery: '', expandedMatches: new Set(), expandedGroups: new Set() };
       const getTeam = (id) => TEAMS.find(t => t.id === id) || { name: 'لم يحدد', logoColor: 'bg-gray-300' };
 
       function calculateStats() {
-        TEAMS.forEach(team => {
-          team.played = 0; team.won = 0; team.drawn = 0; team.lost = 0;
-          team.gf = 0; team.ga = 0; team.pts = 0;
-        });
-
+        TEAMS.forEach(team => { team.played = 0; team.won = 0; team.drawn = 0; team.lost = 0; team.gf = 0; team.ga = 0; team.pts = 0; });
         MATCHES.forEach(match => {
-          if (match.status !== 'FINISHED') return;
-          if (match.homeScore === null || match.awayScore === null) return;
-
-          const home = TEAMS.find(t => t.id === match.homeTeamId);
-          const away = TEAMS.find(t => t.id === match.awayTeamId);
-
-          if (!home || !away) return;
-
-          const hScore = parseInt(match.homeScore);
-          const aScore = parseInt(match.awayScore);
-
-          home.played++; away.played++;
-          home.gf += hScore; home.ga += aScore;
-          away.gf += aScore; away.ga += hScore;
-
-          if (hScore > aScore) {
-            home.won++; home.pts += 3; away.lost++;
-          } else if (hScore < aScore) {
-            away.won++; away.pts += 3; home.lost++;
-          } else {
-            home.drawn++; home.pts += 1; away.drawn++; away.pts += 1;
-          }
+          if (match.status !== 'FINISHED' || match.homeScore === null || match.awayScore === null) return;
+          const h = TEAMS.find(t => t.id === match.homeTeamId);
+          const a = TEAMS.find(t => t.id === match.awayTeamId);
+          if (!h || !a) return;
+          const hs = parseInt(match.homeScore), as = parseInt(match.awayScore);
+          h.played++; a.played++; h.gf += hs; h.ga += as; a.gf += as; a.ga += hs;
+          if (hs > as) { h.won++; h.pts += 3; a.lost++; }
+          else if (hs < as) { a.won++; a.pts += 3; h.lost++; }
+          else { h.drawn++; h.pts++; a.drawn++; a.pts++; }
         });
       }
 
-      function init() {
-        try {
-          calculateStats();
-          renderNav();
-          renderContent();
-          updateIcons();
-        } catch (e) {
-          console.error(e);
-        }
-      }
-
-      function updateIcons() {
-        setTimeout(() => {
-             if (window.lucide && typeof window.lucide.createIcons === 'function') {
-               window.lucide.createIcons();
-             }
-        }, 100);
-      }
-
+      function init() { calculateStats(); renderNav(); renderContent(); updateIcons(); }
+      function updateIcons() { setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50); }
+      
       function renderNav() {
-        const tabs = [
-          { id: 'standings', label: 'الترتيب', icon: 'shield' },
-          { id: 'matches', label: 'المباريات', icon: 'calendar-days' },
-          { id: 'scorers', label: 'الهدافين', icon: 'users' },
-        ];
-        const container = document.getElementById('nav-tabs');
-        if (!container) return;
-        container.innerHTML = tabs.map(tab => `
-          <button onclick="setTab('${tab.id}')" class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 ${state.activeTab === tab.id ? 'bg-white text-navy-900 shadow-md border border-gray-100' : 'text-gray-400 hover:text-white hover:bg-navy-800'}">
-            <i data-lucide="${tab.icon}" class="w-4 h-4 ${state.activeTab === tab.id ? 'text-gold-400' : ''}"></i>
-            <span>${tab.label}</span>
-          </button>
-        `).join('');
+        const tabs = [ { id: 'standings', label: 'الترتيب', icon: 'shield' }, { id: 'matches', label: 'المباريات', icon: 'calendar-days' }, { id: 'scorers', label: 'الهدافين', icon: 'users' } ];
+        document.getElementById('nav-tabs').innerHTML = tabs.map(t => `<button onclick="setTab('${t.id}')" class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-bold transition-all ${state.activeTab === t.id ? 'bg-white text-navy-900 shadow-sm' : 'text-gray-400 hover:text-white'}"><i data-lucide="${t.icon}" class="w-4 h-4 ${state.activeTab === t.id ? 'text-gold-400' : ''}"></i><span>${t.label}</span></button>`).join('');
       }
 
       function renderContent() {
-        const container = document.getElementById('app-content');
-        if (!container) return;
-        container.className = "max-w-md mx-auto px-4 py-6 space-y-4 fade-in";
-        if (state.activeTab === 'matches') renderMatches(container);
-        else if (state.activeTab === 'standings') renderStandings(container);
-        else if (state.activeTab === 'scorers') renderScorers(container);
+        const c = document.getElementById('app-content');
+        c.className = "max-w-md mx-auto px-4 py-6 space-y-4 fade-in";
+        if (state.activeTab === 'matches') renderMatches(c);
+        else if (state.activeTab === 'standings') renderStandings(c);
+        else if (state.activeTab === 'scorers') renderScorers(c);
       }
 
-      window.setTab = function(tab) {
-        state.activeTab = tab;
-        state.searchQuery = '';
-        renderNav();
-        renderContent();
-        updateIcons();
-      }
-      window.setMatchFilter = function(filter) { state.matchesFilter = filter; renderContent(); updateIcons(); }
-      window.setSearch = function(query) { state.searchQuery = query; renderContent(); updateIcons(); }
-      window.toggleMatchDetails = function(matchId) {
-        if (state.expandedMatches.has(matchId)) state.expandedMatches.delete(matchId);
-        else state.expandedMatches.add(matchId);
-        renderContent();
-        updateIcons();
-      }
-      window.toggleGroupMatches = function(group) {
-        if (state.expandedGroups.has(group)) state.expandedGroups.delete(group);
-        else state.expandedGroups.add(group);
-        renderContent();
-        updateIcons();
-      }
+      window.setTab = (t) => { state.activeTab = t; renderNav(); renderContent(); updateIcons(); };
+      window.setMatchFilter = (f) => { state.matchesFilter = f; renderContent(); updateIcons(); };
+      window.setSearch = (q) => { state.searchQuery = q; renderContent(); updateIcons(); };
+      window.toggleMatchDetails = (id) => { state.expandedMatches.has(id) ? state.expandedMatches.delete(id) : state.expandedMatches.add(id); renderContent(); updateIcons(); };
+      window.toggleGroupMatches = (g) => { state.expandedGroups.has(g) ? state.expandedGroups.delete(g) : state.expandedGroups.add(g); renderContent(); updateIcons(); };
 
-      function renderMatches(container) {
-        let filteredMatches = MATCHES.filter(m => {
-          if (state.matchesFilter === 'ALL') return true;
-          return m.group === state.matchesFilter;
-        });
-
-        if (state.searchQuery) {
-          const query = state.searchQuery.trim();
-          filteredMatches = filteredMatches.filter(m => {
-             const h = getTeam(m.homeTeamId);
-             const a = getTeam(m.awayTeamId);
-             return h.name.includes(query) || a.name.includes(query);
-          });
-        }
-
-        const searchHtml = `
-          <div class="relative mb-4">
-            <input type="text" placeholder="بحث عن فريق..." class="w-full bg-white border border-gray-300 rounded-lg py-2.5 px-4 pr-10 text-sm focus:outline-none focus:border-navy-900 transition-all text-navy-900 font-medium placeholder-gray-400" oninput="window.setSearch(this.value)" value="${state.searchQuery}">
-            <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"></i>
-          </div>
-        `;
+      function renderMatches(c) {
+        let list = MATCHES.filter(m => state.matchesFilter === 'ALL' || m.group === state.matchesFilter);
+        if (state.searchQuery) list = list.filter(m => getTeam(m.homeTeamId).name.includes(state.searchQuery) || getTeam(m.awayTeamId).name.includes(state.searchQuery));
         const filters = ['ALL', 'A', 'B', 'C', 'D'];
-        const filterHtml = `
-          <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide mb-4">
-            ${filters.map(f => `<button onclick="setMatchFilter('${f}')" class="px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-colors ${state.matchesFilter === f ? 'bg-navy-900 text-gold-400 shadow-md border border-navy-800' : 'bg-white text-gray-500 border border-gray-200'}">${f === 'ALL' ? 'كل المباريات' : `المجموعة ${f}`}</button>`).join('')}
-          </div>
-        `;
-
-        const matchesListHtml = filteredMatches.length ? filteredMatches.map(match => renderMatchCard(match)).join('') : 
-          `<div class="text-center py-6 text-gray-400 text-sm bg-white rounded-lg border border-gray-200">لا توجد مباريات مطابقة</div>`;
-
-        let knockoutHtml = '';
-        if (state.matchesFilter === 'ALL' && !state.searchQuery) {
-            knockoutHtml = `
-              <div class="mt-8 pt-6 animate-fadeIn">
-                <div class="flex items-center justify-center gap-2 mb-6">
-                   <div class="h-0.5 bg-gray-300 flex-1 rounded-full"></div>
-                   <h3 class="font-black text-navy-900 text-lg px-2">الأدوار الإقصائية</h3>
-                   <div class="h-0.5 bg-gray-300 flex-1 rounded-full"></div>
-                </div>
-                ${KNOCKOUT_MATCHES.map(m => renderMatchCard(m, true)).join('')}
-              </div>
-            `;
-        }
-
-        container.innerHTML = `${searchHtml}${filterHtml}${matchesListHtml}${knockoutHtml}`;
-      }
-
-      function renderMatchCard(match, isKnockout = false) {
-        const home = getTeam(match.homeTeamId);
-        const away = getTeam(match.awayTeamId);
-        const isFinished = match.status === 'FINISHED';
-        const isExpanded = state.expandedMatches.has(match.id);
-        const hasDetails = match.details && match.details.scorers;
-
-        let detailsHtml = '';
-        if (isExpanded) {
-            // Placeholders for details when expanded
-            detailsHtml = `
-            <div class="border-t border-gray-100 bg-gray-50/80 p-4 text-sm animate-fadeIn backdrop-blur-sm">
-                 <div class="flex justify-between items-start">
-                   <div class="flex-1 flex flex-col items-center gap-1.5 pt-1">
-                      ${hasDetails && match.details.scorers.filter(s => s.teamId === match.homeTeamId).map(s => `
-                        <div class="flex items-center gap-1.5"><span class="text-xs font-bold text-navy-900">${s.player}</span><i data-lucide="goal" class="w-3 h-3 text-gold-500 fill-gold-500"></i></div>
-                      `).join('') || '<span class="text-[10px] text-gray-300 py-1">-</span>'}
-                   </div>
-                   <div class="px-3 flex flex-col items-center justify-center">
-                      <span class="text-[9px] text-gray-400 bg-white border border-gray-100 px-2 py-0.5 rounded-full shadow-sm">الأهداف</span>
-                   </div>
-                   <div class="flex-1 flex flex-col items-center gap-1.5 pt-1">
-                      ${hasDetails && match.details.scorers.filter(s => s.teamId === match.awayTeamId).map(s => `
-                        <div class="flex items-center gap-1.5"><i data-lucide="goal" class="w-3 h-3 text-gold-500 fill-gold-500"></i><span class="text-xs font-bold text-navy-900">${s.player}</span></div>
-                      `).join('') || '<span class="text-[10px] text-gray-300 py-1">-</span>'}
-                   </div>
-                 </div>
-            </div>`;
-        }
-
-        const headerLabel = match.title ? match.title : `${match.group} - ${match.round}`;
-
-        return `
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-300 mb-4 cursor-pointer relative z-0 ${isKnockout ? 'mt-4 border-t-4 border-t-gold-400' : ''}" onclick="toggleMatchDetails('${match.id}')">
-            <div class="bg-gray-50 px-4 py-2 flex justify-between items-center text-xs text-gray-500 border-b border-gray-100">
-              <div class="flex items-center gap-1.5 text-navy-800 font-medium"><i data-lucide="calendar" class="w-3 h-3 text-gold-500"></i><span>${match.date}</span></div>
-              <div class="flex items-center gap-2 font-medium"><span>${headerLabel}</span></div>
-            </div>
-            <div class="p-4 flex items-center justify-between relative">
-              <div class="flex flex-col items-center flex-1">
-                <div class="w-12 h-12 rounded-full mb-2 flex items-center justify-center text-white shadow-md ${home.logoColor} font-bold text-lg border-2 border-white ring-1 ring-gray-100">${home.name.charAt(0)}</div>
-                <span class="text-sm font-bold text-navy-900 text-center leading-tight">${home.name}</span>
-              </div>
-              <div class="flex flex-col items-center justify-center w-24">
-                <div class="flex items-center justify-center gap-2 text-2xl font-black text-navy-900">
-                  ${isFinished ? `<span>${match.homeScore}</span><span class="text-gray-300 text-xl font-light">-</span><span>${match.awayScore}</span>` : `<span class="text-xl text-gray-300 font-bold bg-gray-50 px-2 py-1 rounded">VS</span>`}
-                </div>
-                ${!isFinished ? `<div class="flex items-center gap-1 mt-2 text-navy-800 text-xs font-bold bg-gold-100 px-2 py-1 rounded-md"><i data-lucide="clock" class="w-3 h-3"></i><span dir="ltr">${match.time}</span></div>` : 
-                `<div class="mt-1 text-[10px] text-gray-400 flex items-center gap-0.5">${isExpanded ? 'إخفاء' : 'تفاصيل'}<i data-lucide="${isExpanded ? 'chevron-up' : 'chevron-down'}" class="w-3 h-3"></i></div>`}
-              </div>
-              <div class="flex flex-col items-center flex-1">
-                <div class="w-12 h-12 rounded-full mb-2 flex items-center justify-center text-white shadow-md ${away.logoColor} font-bold text-lg border-2 border-white ring-1 ring-gray-100">${away.name.charAt(0)}</div>
-                <span class="text-sm font-bold text-navy-900 text-center leading-tight">${away.name}</span>
-              </div>
-            </div>
-            ${detailsHtml}
-            <div class="px-4 py-2 bg-gray-50 border-t border-gray-100 flex items-center justify-center gap-1 text-[10px] text-gray-500 font-medium"><i data-lucide="map-pin" class="w-3 h-3 text-gold-500"></i>${match.stadium}</div>
-          </div>
-        `;
-      }
-
-      function renderStandings(container) {
-        const groups = ['A', 'B', 'C', 'D'];
-        const html = groups.map(group => {
-          const groupTeams = TEAMS.filter(t => t.group === group);
-          groupTeams.sort((a, b) => {
-            if (b.pts !== a.pts) return b.pts - a.pts;
-            const diffA = a.gf - a.ga; const diffB = b.gf - b.ga;
-            if (diffB !== diffA) return diffB - diffA;
-            return b.gf - a.gf;
-          });
-          const isExpanded = state.expandedGroups.has(group);
-          return `
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
-              <div class="bg-navy-900 px-4 py-3 flex justify-between items-center cursor-pointer hover:bg-navy-800 transition border-b border-navy-800" onclick="toggleGroupMatches('${group}')">
-                <div class="flex items-center gap-2"><div class="w-1 h-4 bg-gold-400 rounded-full"></div><h3 class="text-white font-bold text-lg">المجموعة ${group}</h3></div>
-                <div class="flex items-center gap-2 text-xs text-gold-400 bg-navy-800/50 px-2 py-1 rounded-full border border-navy-700"><span>${isExpanded ? 'إخفاء' : 'عرض'}</span><i data-lucide="${isExpanded ? 'chevron-up' : 'chevron-down'}" class="w-3 h-3"></i></div>
-              </div>
-              <div class="overflow-x-auto">
-                <table class="w-full text-sm text-center">
-                  <thead class="bg-gray-50 text-gray-500 font-medium border-b border-gray-200 text-xs">
-                    <tr><th class="px-3 py-3 text-right w-1/3">الفريق</th><th class="px-2 py-3">ل</th><th class="px-2 py-3">ف</th><th class="px-2 py-3">ت</th><th class="px-2 py-3">خ</th><th class="px-2 py-3">+/-</th><th class="px-3 py-3 font-bold text-navy-900 bg-gray-100">نقاط</th></tr>
-                  </thead>
-                  <tbody class="divide-y divide-gray-100">
-                    ${groupTeams.map((team, index) => `
-                      <tr class="hover:bg-blue-50/20 transition-colors">
-                        <td class="px-3 py-3 text-right font-semibold text-gray-800 flex items-center gap-3"><span class="w-5 text-center text-xs ${index < 2 ? 'text-green-600 font-black' : 'text-gray-400 font-medium'}">${index + 1}</span><div class="w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center text-[10px] text-white ${team.logoColor} font-bold shadow-sm">${team.name.charAt(0)}</div><span class="truncate text-xs font-bold">${team.name}</span></td>
-                        <td class="px-2 py-3 text-gray-600 font-medium">${team.played}</td>
-                        <td class="px-2 py-3 text-gray-600">${team.won}</td>
-                        <td class="px-2 py-3 text-gray-600">${team.drawn}</td>
-                        <td class="px-2 py-3 text-gray-600">${team.lost}</td>
-                        <td class="px-2 py-3 text-gray-600 font-medium text-xs" dir="ltr">${(team.gf - team.ga) > 0 ? '+' : ''}${team.gf - team.ga}</td>
-                        <td class="px-3 py-3 font-black text-navy-900 bg-gray-50">${team.pts}</td>
-                      </tr>
-                    `).join('')}
-                  </tbody>
-                </table>
-              </div>
-              ${isExpanded ? `<div class="bg-gray-50 border-t border-gray-200 p-4 animate-fadeIn"><h4 class="text-xs font-bold text-gray-500 mb-3 flex items-center gap-1"><i data-lucide="calendar-days" class="w-3 h-3"></i> مباريات المجموعة</h4><div class="space-y-3">${MATCHES.filter(m => m.group === group).map(m => renderMatchCard(m)).join('')}</div></div>` : ''}
-            </div>
-          `;
-        }).join('');
-        container.innerHTML = html;
-      }
-
-      function renderScorers(container) {
-        let sorted = [...PLAYERS].sort((a, b) => b.goals - a.goals);
-        if (state.searchQuery) sorted = sorted.filter(p => p.name.includes(state.searchQuery));
-        container.innerHTML = `
-          <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-            <div class="bg-gradient-to-r from-navy-900 to-navy-800 px-6 py-8 flex flex-col items-center justify-center text-center">
-              <div class="bg-gold-400 p-3 rounded-full mb-3 shadow-lg"><i data-lucide="trophy" class="text-navy-900 w-8 h-8"></i></div>
-              <h2 class="text-white text-xl font-bold">قائمة الهدافين</h2>
-            </div>
-            <div class="divide-y divide-gray-100">
-              ${sorted.length ? sorted.map((player, index) => {
-                const team = getTeam(player.teamId);
-                return `<div class="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"><div class="flex items-center gap-4"><div class="w-8 h-8 flex items-center justify-center rounded-full font-bold text-sm bg-gray-100 text-gray-400">${index + 1}</div><div><h4 class="font-bold text-navy-900">${player.name}</h4><p class="text-xs text-gray-500">${team.name}</p></div></div><div class="bg-gray-50 rounded-lg px-3 py-1 border border-gray-100"><span class="text-lg font-black text-navy-900">${player.goals}</span></div></div>`;
-              }).join('') : `<div class="p-8 text-center text-gray-400 text-sm">لا يوجد هدافين مسجلين حالياً</div>`}
-            </div>
-          </div>
-        `;
-      }
-
-      document.addEventListener('DOMContentLoaded', init);
-    </script>
-</body>
-</html>
+        const filterHtml = `<div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide mb-4">${filters.map(f => `<button onclick="setMatchFilter('${f}')" class="px-4 py-2 roun
