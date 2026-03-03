@@ -270,14 +270,81 @@
       };
 
       // رسم صفحة المباريات
+      // رسم صفحة المباريات (تعديل الفلاتر: قادمة / منتهية)
       function renderMatches(c) {
-        let list = MATCHES.filter(m => state.matchesFilter === 'ALL' || m.group === state.matchesFilter);
-        if (state.searchQuery) list = list.filter(m => getTeam(m.homeTeamId).name.includes(state.searchQuery) || getTeam(m.awayTeamId).name.includes(state.searchQuery));
-        const filters = ['ALL', 'A', 'B', 'C', 'D'];
-        const filterHtml = `<div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide mb-4">${filters.map(f => `<button onclick="setMatchFilter('${f}')" class="px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap ${state.matchesFilter === f ? 'bg-navy-900 text-gold-400' : 'bg-white text-gray-500'}">${f === 'ALL' ? 'كل المباريات' : `المجموعة ${f}`}</button>`).join('')}</div>`;
-        let html = `<div class="relative mb-4"><input type="text" placeholder="بحث..." class="w-full bg-white border border-gray-300 rounded-lg py-2.5 px-4 text-sm" oninput="window.setSearch(this.value)" value="${state.searchQuery}"></div>${filterHtml}`;
-        html += list.length ? list.map(m => renderMatchCard(m)).join('') : `<div class="text-center py-6 text-gray-400 text-sm bg-white rounded-lg">لا توجد مباريات</div>`;
-        if (state.matchesFilter === 'ALL' && !state.searchQuery) html += `<div class="mt-8 pt-6"><div class="flex items-center justify-center gap-2 mb-6"><div class="h-0.5 bg-gray-300 flex-1"></div><h3 class="font-black text-navy-900 text-lg">الأدوار الإقصائية</h3><div class="h-0.5 bg-gray-300 flex-1"></div></div>${KNOCKOUT_MATCHES.map(m => renderMatchCard(m, true)).join('')}</div>`;
+        // 1. تحديد الفلاتر الجديدة
+        const filters = [
+            { id: 'ALL', label: 'الكل' },
+            { id: 'UPCOMING', label: 'مباريات قادمة' },
+            { id: 'FINISHED', label: 'مباريات منتهية' }
+        ];
+
+        // 2. تصفية مباريات المجموعات بناءً على الفلتر المختار
+        let list = MATCHES.filter(m => {
+            // البحث
+            const matchesSearch = getTeam(m.homeTeamId).name.includes(state.searchQuery) || getTeam(m.awayTeamId).name.includes(state.searchQuery);
+            if (!matchesSearch) return false;
+
+            // الفلترة
+            if (state.matchesFilter === 'ALL') return true;
+            if (state.matchesFilter === 'FINISHED') return m.status === 'FINISHED';
+            if (state.matchesFilter === 'UPCOMING') return m.status === 'SCHEDULED' || m.status === 'LIVE';
+            return true;
+        });
+
+        // 3. تصفية مباريات الأدوار الإقصائية أيضاً
+        let koList = KNOCKOUT_MATCHES.filter(m => {
+             if (state.matchesFilter === 'ALL') return true;
+             if (state.matchesFilter === 'FINISHED') return m.status === 'FINISHED';
+             if (state.matchesFilter === 'UPCOMING') return m.status === 'SCHEDULED';
+             return true;
+        });
+
+        // 4. رسم أزرار الفلتر
+        const filterHtml = `
+            <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide mb-4">
+                ${filters.map(f => `
+                    <button 
+                        onclick="setMatchFilter('${f.id}')" 
+                        class="px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${state.matchesFilter === f.id ? 'bg-navy-900 text-gold-400 shadow-md' : 'bg-white text-gray-500 border border-gray-100'}"
+                    >
+                        ${f.label}
+                    </button>
+                `).join('')}
+            </div>
+        `;
+
+        // 5. رسم مربع البحث
+        let html = `
+            <div class="relative mb-4">
+                <input type="text" placeholder="بحث عن فريق..." class="w-full bg-white border border-gray-300 rounded-lg py-2.5 px-4 pr-10 text-sm focus:outline-none focus:border-navy-900 transition-all text-navy-900 font-medium placeholder-gray-400" oninput="window.setSearch(this.value)" value="${state.searchQuery}">
+                <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"></i>
+            </div>
+            ${filterHtml}
+        `;
+
+        // 6. عرض النتائج
+        if (list.length > 0) {
+            html += list.map(m => renderMatchCard(m)).join('');
+        } else if (state.matchesFilter !== 'UPCOMING' && list.length === 0 && koList.length === 0) {
+            // رسالة في حالة عدم وجود مباريات (إلا لو بنعرض القادمة وفيه اقصائيات)
+            html += `<div class="text-center py-10 text-gray-400 text-sm bg-white rounded-lg border border-dashed border-gray-200">لا توجد مباريات مطابقة</div>`;
+        }
+
+        // 7. عرض الأدوار الإقصائية (إذا طابقت الفلتر)
+        if (koList.length > 0) {
+            html += `
+                <div class="mt-8 pt-6 animate-fadeIn">
+                    <div class="flex items-center justify-center gap-2 mb-6">
+                        <div class="h-0.5 bg-gray-300 flex-1 rounded-full"></div>
+                        <h3 class="font-black text-navy-900 text-lg px-2">الأدوار الإقصائية</h3>
+                        <div class="h-0.5 bg-gray-300 flex-1 rounded-full"></div>
+                    </div>
+                    ${koList.map(m => renderMatchCard(m, true)).join('')}
+                </div>
+            `;
+        }
+
         c.innerHTML = html;
       }
 
