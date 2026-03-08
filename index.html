@@ -220,16 +220,22 @@
       ];
 
       const KNOCKOUT_MATCHES = [
-        { id: 'qf1', homeTeamId: 't1', awayTeamId: 't9', stage: 'ربع النهائي', title: 'أول A × ثاني C', date: '9 مارس', time: '22:00', stadium: 'الملعب 1', status: 'SCHEDULED', details: { scorers: [] } },
-        { id: 'qf2', homeTeamId: 't12', awayTeamId: 't6', stage: 'ربع النهائي', title: 'أول D × ثاني B', date: '9 مارس', time: '22:00', stadium: 'الملعب 2', status: 'SCHEDULED', details: { scorers: [] } },
-        { id: 'qf3', homeTeamId: 't4', awayTeamId: 't14', stage: 'ربع النهائي', title: 'أول B × ثاني D', date: '9 مارس', time: '22:30', stadium: 'الملعب 1', status: 'SCHEDULED', details: { scorers: [] } },
-        { id: 'qf4', homeTeamId: 't3', awayTeamId: 't10', stage: 'ربع النهائي', title: 'أول C × ثاني A', date: '9 مارس', time: '22:30', stadium: 'الملعب 2', status: 'SCHEDULED', details: { scorers: [] } },
-        { id: 'sf1', homeTeamId: null, awayTeamId: null, stage: 'نصف النهائي', title: 'الفائز (QF1) × الفائز (QF3)', date: '9 مارس', time: '23:00', stadium: 'الملعب 1', status: 'SCHEDULED', details: { scorers: [] } },
-        { id: 'sf2', homeTeamId: null, awayTeamId: null, stage: 'نصف النهائي', title: 'الفائز (QF2) × الفائز (QF4)', date: '9 مارس', time: '23:00', stadium: 'الملعب 2', status: 'SCHEDULED', details: { scorers: [] } },
+         { id: 'qf1', homeTeamId: 't1', awayTeamId: 't9', stage: 'ربع النهائي', title: 'ربع النهائي 1', date: '9 مارس', time: '22:00', stadium: 'الملعب 1', status: 'SCHEDULED', homeScore: null, awayScore: null, details: { scorers: [] } },
+        { id: 'qf2', homeTeamId: 't12', awayTeamId: 't6', stage: 'ربع النهائي', title: 'ربع النهائي 2', date: '9 مارس', time: '22:00', stadium: 'الملعب 2', status: 'SCHEDULED', homeScore: null, awayScore: null, details: { scorers: [] } },
+        { id: 'qf3', homeTeamId: 't4', awayTeamId: 't14', stage: 'ربع النهائي', title: 'ربع النهائي 3', date: '9 مارس', time: '22:30', stadium: 'الملعب 1', status: 'SCHEDULED', homeScore: null, awayScore: null, details: { scorers: [] } },
+        { id: 'qf4', homeTeamId: 't3', awayTeamId: 't10', stage: 'ربع النهائي', title: 'ربع النهائي 4', date: '9 مارس', time: '22:30', stadium: 'الملعب 2', status: 'SCHEDULED', homeScore: null, awayScore: null, details: { scorers: [] } },
         
-        { id: 'sf3', homeTeamId: null, awayTeamId: null, stage: 'مباراة الثالث والرابع', title: 'الخاسر (sf1) × الخاسر (sf2)', date: '10 مارس', time: '22:30', stadium: 'الملعب 1', status: 'SCHEDULED', details: { scorers: [] } },
+        // نصف النهائي
+        { id: 'sf1', homeTeamId: null, awayTeamId: null, stage: 'نصف النهائي', title: 'فائز QF1 × فائز QF2', date: '10 مارس', time: '22:00', stadium: 'الملعب 1', status: 'SCHEDULED', homeScore: null, awayScore: null, details: { scorers: [] } },
+        { id: 'sf2', homeTeamId: null, awayTeamId: null, stage: 'نصف النهائي', title: 'فائز QF3 × فائز QF4', date: '10 مارس', time: '22:00', stadium: 'الملعب 2', status: 'SCHEDULED', homeScore: null, awayScore: null, details: { scorers: [] } },
+        
+        // --- مباراة المركز الثالث (مهمة للاحتفال) ---
+        // (غير الحالة لـ FINISHED وحط النتيجة لما تلعب)
+        { id: '3rd', homeTeamId: null, awayTeamId: null, stage: 'المركز الثالث', title: 'تحديد الثالث', date: '10 مارس', time: '22:40', stadium: 'الملعب 2', status: 'SCHEDULED', homeScore: null, awayScore: null, details: { scorers: [] } },
 
-        { id: 'f1', homeTeamId: null, awayTeamId: null, stage: 'النهائي', title: 'كأس البطولة', date: '10 مارس', time: '23:00', stadium: 'الملعب الرئيسي', status: 'SCHEDULED', details: { scorers: [] } },
+        // --- النهائي (مهم جداً للاحتفال) ---
+        // (عندما تنتهي البطولة، غير SCHEDULED إلى FINISHED وضع النتيجة)
+        { id: 'f1', homeTeamId: null, awayTeamId: null, stage: 'النهائي', title: 'كأس البطولة', date: '10 مارس', time: '23:00', stadium: 'الملعب الرئيسي', status: 'SCHEDULED', homeScore: null, awayScore: null, details: { scorers: [] } },
       ];
 
       // ==========================================
@@ -239,70 +245,134 @@
       let state = { activeTab: 'matches', matchesFilter: 'ALL', searchQuery: '', expandedMatches: new Set(), expandedGroups: new Set() };
       const getTeam = (id) => TEAMS.find(t => t.id === id) || { name: 'لم يحدد', logoColor: 'bg-gray-300' };
 
-      // حساب النقاط والإحصائيات
+      // --- Logic ---
       function calculateStats() {
         TEAMS.forEach(team => { team.played = 0; team.won = 0; team.drawn = 0; team.lost = 0; team.gf = 0; team.ga = 0; team.pts = 0; });
-        MATCHES.forEach(match => {
+        const allMatches = [...MATCHES, ...KNOCKOUT_MATCHES];
+        allMatches.forEach(match => {
           if (match.status !== 'FINISHED' || match.homeScore === null || match.awayScore === null) return;
-          const h = TEAMS.find(t => t.id === match.homeTeamId);
-          const a = TEAMS.find(t => t.id === match.awayTeamId);
-          if (!h || !a) return;
-          const hs = parseInt(match.homeScore), as = parseInt(match.awayScore);
-          h.played++; a.played++; h.gf += hs; h.ga += as; a.gf += as; a.ga += hs;
-          if (hs > as) { h.won++; h.pts += 3; a.lost++; }
-          else if (hs < as) { a.won++; a.pts += 3; h.lost++; }
-          else { h.drawn++; h.pts++; a.drawn++; a.pts++; }
+          if (match.group) { // حساب النقاط للمجموعات فقط
+              const h = TEAMS.find(t => t.id === match.homeTeamId);
+              const a = TEAMS.find(t => t.id === match.awayTeamId);
+              if (!h || !a) return;
+              const hs = parseInt(match.homeScore), as = parseInt(match.awayScore);
+              h.played++; a.played++; h.gf += hs; h.ga += as; a.gf += as; a.ga += hs;
+              if (hs > as) { h.won++; h.pts += 3; a.lost++; }
+              else if (hs < as) { a.won++; a.pts += 3; h.lost++; }
+              else { h.drawn++; h.pts++; a.drawn++; a.pts++; }
+          }
         });
       }
 
-      // حساب الهدافين تلقائياً (الدالة التي كانت تسبب المشكلة)
       function calculateAutoScorers() {
-        PLAYERS.length = 0; // تفريغ القائمة القديمة
+        PLAYERS.length = 0;
         const playersMap = {};
-
         const extract = (matchList) => {
             matchList.forEach(m => {
                 if (m.details && m.details.scorers) {
                     m.details.scorers.forEach(s => {
                         const key = s.player + '-' + s.teamId;
                         if (!playersMap[key]) {
-                            playersMap[key] = { 
-                                id: key, 
-                                name: s.player, 
-                                teamId: s.teamId, 
-                                goals: 0 
-                            };
+                            playersMap[key] = { id: key, name: s.player, teamId: s.teamId, goals: 0 };
                         }
                         playersMap[key].goals += 1;
                     });
                 }
             });
         };
-
         extract(MATCHES);
         extract(KNOCKOUT_MATCHES);
-        
-        // تحويل الـ Map إلى مصفوفة
         Object.values(playersMap).forEach(p => PLAYERS.push(p));
       }
 
-      // دالة البدء
+      // --- دالة الاحتفال (المسؤولة عن ظهور المراكز) ---
+      function checkAndRenderChampions() {
+        const finalMatch = KNOCKOUT_MATCHES.find(m => m.id === 'f1');
+        const thirdPlaceMatch = KNOCKOUT_MATCHES.find(m => m.id === '3rd');
+
+        // الشرط: لازم النهائي يكون FINISHED والنتيجة مكتوبة
+        if (!finalMatch || finalMatch.status !== 'FINISHED' || finalMatch.homeScore === null) return;
+
+        let firstId, secondId, thirdId;
+
+        // حساب الأول والثاني
+        if (parseInt(finalMatch.homeScore) > parseInt(finalMatch.awayScore)) {
+            firstId = finalMatch.homeTeamId;
+            secondId = finalMatch.awayTeamId;
+        } else {
+            firstId = finalMatch.awayTeamId;
+            secondId = finalMatch.homeTeamId;
+        }
+
+        // حساب الثالث (لو الماتش اتلعب)
+        if (thirdPlaceMatch && thirdPlaceMatch.status === 'FINISHED' && thirdPlaceMatch.homeScore !== null) {
+             if (parseInt(thirdPlaceMatch.homeScore) > parseInt(thirdPlaceMatch.awayScore)) {
+                thirdId = thirdPlaceMatch.homeTeamId;
+            } else {
+                thirdId = thirdPlaceMatch.awayTeamId;
+            }
+        }
+
+        const t1 = getTeam(firstId);
+        const t2 = getTeam(secondId);
+        const t3 = thirdId ? getTeam(thirdId) : null;
+
+        const container = document.getElementById('app-content');
+        const celebrationHTML = `
+          <div class="relative mb-8 pt-6 text-center animate-fadeIn">
+            <!-- خلفية الكونفيتي -->
+            <div class="absolute inset-0 overflow-hidden pointer-events-none" style="height: 350px; top: -50px; z-index:0;">
+                ${Array(30).fill(0).map(() => `<div class="confetti" style="left: ${Math.random()*100}%; animation-delay: ${Math.random()*2}s; background-color: ${['#FFD700', '#FF0000', '#00FF00', '#0000FF'][Math.floor(Math.random()*4)]}"></div>`).join('')}
+            </div>
+
+            <h2 class="text-2xl font-black text-navy-900 mb-8 relative z-10 drop-shadow-md">🏆 الفائزين ببطولة رجب 🏆</h2>
+            
+            <div class="flex justify-center items-end gap-2 sm:gap-4 px-2 relative z-10">
+                
+                <!-- المركز الثاني -->
+                <div class="silver-card w-1/3 p-3 rounded-t-xl rounded-b-lg flex flex-col items-center justify-end h-32 relative order-1">
+                    <div class="absolute -top-3 bg-gray-400 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md border-2 border-white">2</div>
+                    <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center font-bold text-gray-500 text-xl shadow-md mb-2 ring-2 ring-gray-100">${t2.name.charAt(0)}</div>
+                    <div class="font-bold text-navy-900 text-xs sm:text-sm text-center leading-tight line-clamp-2">${t2.name}</div>
+                    <div class="text-[9px] text-gray-600 font-bold mt-1 uppercase tracking-wider">الوصيف</div>
+                </div>
+
+                <!-- المركز الأول -->
+                <div class="champion-card w-1/3 p-3 rounded-t-xl rounded-b-lg flex flex-col items-center justify-end h-44 relative order-2 z-20 -translate-y-4">
+                    <div class="absolute -top-8 text-5xl drop-shadow-md animate-bounce">👑</div>
+                    <div class="w-16 h-16 rounded-full bg-white flex items-center justify-center font-bold text-yellow-600 text-3xl shadow-lg mb-3 border-4 border-yellow-200">${t1.name.charAt(0)}</div>
+                    <div class="font-black text-navy-900 text-sm sm:text-base text-center leading-tight line-clamp-2">${t1.name}</div>
+                    <div class="text-[10px] text-yellow-900 font-black mt-2 bg-white/40 px-3 py-1 rounded-full">البطل</div>
+                </div>
+
+                <!-- المركز الثالث -->
+                ${t3 ? `
+                <div class="bronze-card w-1/3 p-3 rounded-t-xl rounded-b-lg flex flex-col items-center justify-end h-28 relative order-3">
+                    <div class="absolute -top-3 bg-[#CD7F32] text-white text-xs font-bold px-3 py-1 rounded-full shadow-md border-2 border-white">3</div>
+                    <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center font-bold text-[#A0522D] text-lg shadow-md mb-2 ring-2 ring-orange-100">${t3.name.charAt(0)}</div>
+                    <div class="font-bold text-navy-900 text-xs sm:text-sm text-center leading-tight line-clamp-2">${t3.name}</div>
+                    <div class="text-[9px] text-[#5c3a2e] font-bold mt-1">البرونزية</div>
+                </div>
+                ` : ''}
+            </div>
+          </div>
+        `;
+        container.insertAdjacentHTML('afterbegin', celebrationHTML);
+      }
+
       function init() { 
         calculateStats(); 
         calculateAutoScorers(); 
         renderNav(); 
         renderContent(); 
+        checkAndRenderChampions(); // <--- استدعاء دالة الاحتفال
         updateIcons(); 
       }
       
-      // تحديث الأيقونات
       function updateIcons() { 
-        setTimeout(() => { 
-          if (window.lucide && window.lucide.createIcons) window.lucide.createIcons(); 
-        }, 50); 
+        setTimeout(() => { if (window.lucide && window.lucide.createIcons) window.lucide.createIcons(); }, 50); 
       }
       
-      // رسم التبويبات
       function renderNav() {
         const tabs = [ { id: 'standings', label: 'الترتيب', icon: 'shield' }, { id: 'matches', label: 'المباريات', icon: 'calendar-days' }, { id: 'scorers', label: 'الهدافين', icon: 'users' } ];
         const navContainer = document.getElementById('nav-tabs');
@@ -311,7 +381,6 @@
         }
       }
 
-      // رسم المحتوى
       function renderContent() {
         const c = document.getElementById('app-content');
         if(!c) return;
@@ -321,7 +390,6 @@
         else if (state.activeTab === 'scorers') renderScorers(c);
       }
 
-      // دوال التحكم
       window.setTab = (t) => { state.activeTab = t; renderNav(); renderContent(); updateIcons(); };
       window.setMatchFilter = (f) => { state.matchesFilter = f; renderContent(); updateIcons(); };
       window.setSearch = (q) => { state.searchQuery = q; renderContent(); updateIcons(); };
@@ -332,86 +400,46 @@
         renderContent(); updateIcons(); 
       };
 
-      // رسم صفحة المباريات
-      // رسم صفحة المباريات (تعديل الفلاتر: قادمة / منتهية)
       function renderMatches(c) {
-        // 1. تحديد الفلاتر الجديدة
+        // الفلاتر الجديدة
         const filters = [
             { id: 'ALL', label: 'الكل' },
-            { id: 'UPCOMING', label: 'مباريات قادمة' },
-            { id: 'FINISHED', label: 'مباريات منتهية' }
+            { id: 'UPCOMING', label: 'قادمة' },
+            { id: 'FINISHED', label: 'منتهية' }
         ];
 
-        // 2. تصفية مباريات المجموعات بناءً على الفلتر المختار
-        let list = MATCHES.filter(m => {
-            // البحث
-            const matchesSearch = getTeam(m.homeTeamId).name.includes(state.searchQuery) || getTeam(m.awayTeamId).name.includes(state.searchQuery);
-            if (!matchesSearch) return false;
-
-            // الفلترة
+        // تصفية المباريات
+        let allMatches = [...MATCHES, ...KNOCKOUT_MATCHES]; // دمج الكل في قائمة واحدة للعرض
+        let list = allMatches.filter(m => {
+            const h = getTeam(m.homeTeamId); const a = getTeam(m.awayTeamId);
+            // بحث
+            if (state.searchQuery && !h.name.includes(state.searchQuery) && !a.name.includes(state.searchQuery)) return false;
+            // فلتر
             if (state.matchesFilter === 'ALL') return true;
             if (state.matchesFilter === 'FINISHED') return m.status === 'FINISHED';
             if (state.matchesFilter === 'UPCOMING') return m.status === 'SCHEDULED' || m.status === 'LIVE';
             return true;
         });
 
-        // 3. تصفية مباريات الأدوار الإقصائية أيضاً
-        let koList = KNOCKOUT_MATCHES.filter(m => {
-             if (state.matchesFilter === 'ALL') return true;
-             if (state.matchesFilter === 'FINISHED') return m.status === 'FINISHED';
-             if (state.matchesFilter === 'UPCOMING') return m.status === 'SCHEDULED';
-             return true;
-        });
-
-        // 4. رسم أزرار الفلتر
-        const filterHtml = `
-            <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide mb-4">
-                ${filters.map(f => `
-                    <button 
-                        onclick="setMatchFilter('${f.id}')" 
-                        class="px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${state.matchesFilter === f.id ? 'bg-navy-900 text-gold-400 shadow-md' : 'bg-white text-gray-500 border border-gray-100'}"
-                    >
-                        ${f.label}
-                    </button>
-                `).join('')}
-            </div>
-        `;
-
-        // 5. رسم مربع البحث
+        // HTML الفلاتر
+        const filterHtml = `<div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide mb-4">${filters.map(f => `<button onclick="setMatchFilter('${f.id}')" class="px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap ${state.matchesFilter === f.id ? 'bg-navy-900 text-gold-400 shadow-md' : 'bg-white text-gray-500 border border-gray-200'}">${f.label}</button>`).join('')}</div>`;
+        
         let html = `
             <div class="relative mb-4">
-                <input type="text" placeholder="بحث عن فريق..." class="w-full bg-white border border-gray-300 rounded-lg py-2.5 px-4 pr-10 text-sm focus:outline-none focus:border-navy-900 transition-all text-navy-900 font-medium placeholder-gray-400" oninput="window.setSearch(this.value)" value="${state.searchQuery}">
+                <input type="text" placeholder="بحث عن فريق..." class="w-full bg-white border border-gray-300 rounded-lg py-2.5 px-4 text-sm" oninput="window.setSearch(this.value)" value="${state.searchQuery}">
                 <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"></i>
             </div>
             ${filterHtml}
         `;
 
-        // 6. عرض النتائج
         if (list.length > 0) {
             html += list.map(m => renderMatchCard(m)).join('');
-        } else if (state.matchesFilter !== 'UPCOMING' && list.length === 0 && koList.length === 0) {
-            // رسالة في حالة عدم وجود مباريات (إلا لو بنعرض القادمة وفيه اقصائيات)
-            html += `<div class="text-center py-10 text-gray-400 text-sm bg-white rounded-lg border border-dashed border-gray-200">لا توجد مباريات مطابقة</div>`;
+        } else {
+            html += `<div class="text-center py-10 text-gray-400 text-sm bg-white rounded-lg">لا توجد مباريات مطابقة</div>`;
         }
-
-        // 7. عرض الأدوار الإقصائية (إذا طابقت الفلتر)
-        if (koList.length > 0) {
-            html += `
-                <div class="mt-8 pt-6 animate-fadeIn">
-                    <div class="flex items-center justify-center gap-2 mb-6">
-                        <div class="h-0.5 bg-gray-300 flex-1 rounded-full"></div>
-                        <h3 class="font-black text-navy-900 text-lg px-2">الأدوار الإقصائية</h3>
-                        <div class="h-0.5 bg-gray-300 flex-1 rounded-full"></div>
-                    </div>
-                    ${koList.map(m => renderMatchCard(m, true)).join('')}
-                </div>
-            `;
-        }
-
         c.innerHTML = html;
       }
 
-      // رسم كارت المباراة
       function renderMatchCard(m, isKo=false) {
         const h = getTeam(m.homeTeamId), a = getTeam(m.awayTeamId), exp = state.expandedMatches.has(m.id);
         const finished = m.status === 'FINISHED';
@@ -423,7 +451,7 @@
             <div class="flex-1 flex flex-col items-center gap-1">${m.details.scorers.filter(s=>s.teamId===m.awayTeamId).map(s=>`<div>⚽ <span class="text-xs font-bold">${s.player}</span></div>`).join('') || '-'}</div>
           </div></div>`;
         }
-        return `<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-4 cursor-pointer ${isKo ? 'border-t-4 border-t-gold-400' : ''}" onclick="toggleMatchDetails('${m.id}')">
+        return `<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-4 cursor-pointer ${m.stage ? 'border-t-4 border-t-gold-400' : ''}" onclick="toggleMatchDetails('${m.id}')">
           <div class="bg-gray-50 px-4 py-2 flex justify-between text-xs text-gray-500 border-b">
             <div class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i><span>${m.date}</span></div>
             <span>${m.title || (m.group + ' - ' + m.round)}</span>
@@ -441,7 +469,6 @@
         </div>`;
       }
 
-      // رسم صفحة الترتيب
       function renderStandings(c) {
         c.innerHTML = ['A','B','C','D'].map(g => {
           const rows = TEAMS.filter(t=>t.group===g).sort((a,b)=>b.pts-a.pts || (b.gf-b.ga)-(a.gf-a.ga)).map((t,i)=>`
@@ -467,7 +494,6 @@
         }).join('');
       }
 
-      // رسم صفحة الهدافين
       function renderScorers(c) {
         const sorted = [...PLAYERS].sort((a,b) => b.goals - a.goals);
         const list = sorted.map((p, i) => `
@@ -490,7 +516,6 @@
         `;
       }
 
-      // تشغيل الكود عند التحميل
       document.addEventListener('DOMContentLoaded', init);
     </script>
   </body>
